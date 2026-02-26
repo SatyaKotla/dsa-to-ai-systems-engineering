@@ -143,7 +143,28 @@ class DynamicArray():
                 max_value = self._array[i]
         
         return max_value
+    
+    # function to check if the array is sorted
+    def _is_sorted(self):
+        for i in range(1, self._size):
+            if self._array[i] < self._array[i-1]:
+                return False 
+        return True
+    
+    # Removing duplicates from a sorted array in place
+    def remove_duplicates_sorted(self):
+        if not self._is_sorted():
+            raise ValueError("The array must be sorted to remove duplicates in place.")
+        if self._size == 0:
+            return 
+        write = 1 
 
+        for read in range(1, self._size):
+            if self._array[read] != self._array[read-1]:
+                self._array[write] = self._array[read]
+                write += 1
+        self._size = write
+         
 
 if __name__ == "__main__":
     a = DynamicArray()
