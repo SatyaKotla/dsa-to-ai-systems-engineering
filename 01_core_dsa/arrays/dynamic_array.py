@@ -131,6 +131,18 @@ class DynamicArray():
             i = i+1
         return self._array 
 
+    # Finding the maximum element in the array
+    def max(self):
+        if self._size == 0:
+            raise ValueError("The array is empty.")
+        
+        max_value = self._array[0]
+        
+        for i in range(1, self._size):
+            if self._array[i] > max_value:
+                max_value = self._array[i]
+        
+        return max_value
 
 
 if __name__ == "__main__":
@@ -148,3 +160,5 @@ if __name__ == "__main__":
     print(f"\nDeleted value is : {deleted_value}; array after deleting an element at 0th index : {a.to_list()}")
     a.reverse()
     print(f"\nArray after reversing it in place: {a.to_list()}")
+    max_value = a.max()
+    print(f"\nMaximum value in the array: {max_value}")
