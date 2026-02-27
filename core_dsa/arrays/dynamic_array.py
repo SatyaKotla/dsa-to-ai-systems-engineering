@@ -219,21 +219,16 @@ class DynamicArray():
         #Step 3 - reverse the remaining elements
         self._reverse(k, self._size-1)
 
+def _demo() -> None:
+    """ Minimal manual demo for quick verification."""
+    a = DynamicArray([1, 2, 3])
+    a.append(4)
+    a.reverse()
+    print(f"Demo output: {a.to_list()}")
+
+def main() -> None:
+    "Entry point for manual execution."
+    _demo()
 
 if __name__ == "__main__":
-    a = DynamicArray()
-    print(f"Initial array {a.to_list()}")
-    a.append(10)
-    a.append(20)
-    a.append(30)
-    print(f"\nArray after appending 10, 20 , 30 : {a.to_list()}")
-    a.insert(1, 40)
-    print(f"\nArray after inserting an element at index 1 :{a.to_list()}")
-    popped_value = a.pop()
-    print(f"\nPopped value is :{popped_value}; array after popping is : {a.to_list()}")
-    deleted_value = a.delete(0)
-    print(f"\nDeleted value is : {deleted_value}; array after deleting an element at 0th index : {a.to_list()}")
-    a.reverse()
-    print(f"\nArray after reversing it in place: {a.to_list()}")
-    max_value = a.max()
-    print(f"\nMaximum value in the array: {max_value}")
+    main()
