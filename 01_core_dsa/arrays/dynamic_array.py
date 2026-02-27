@@ -133,10 +133,9 @@ class DynamicArray():
     def reverse(self):
         i = 0
         while i < self._size // 2:
-            (self._array[i], self._array[self._size-1]) = (self._array[self._size-1], 
+            (self._array[i], self._array[self._size-1 - i]) = (self._array[self._size-1 - i], 
                                                 self._array[i])
             i = i+1
-        return self._array 
 
     # Finding the maximum element in the array
     def max(self):
