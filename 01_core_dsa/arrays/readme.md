@@ -1,6 +1,6 @@
 # Array Data Structures (Built from Scratch)
 
-This folder contains implementation of a dynamic array in Python, built from first principles withou using Python's built in list features for resizing logic.
+This folder contains implementation of a dynamic array in Python, built from first principles without using Python's built in list features for resizing logic.
 
 The goal is to understand:
 - Memory management
