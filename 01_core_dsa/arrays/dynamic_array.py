@@ -1,9 +1,16 @@
 #dynamic array 
 class DynamicArray():
-    def __init__(self):
+    def __init__(self, iterable = None):
         self._max_len = 1 # capacity of the array
         self._size = 0 # actual size of the array
         self._array = [None] * self._max_len # array
+
+        if iterable is not None:
+            try:
+                for item in iterable:
+                    self.append(item)
+            except TypeError:
+                raise TypeError("Provided argument must be iterable.")
 
     def append(self, item):
         if self._size == self._max_len:
