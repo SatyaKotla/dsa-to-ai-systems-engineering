@@ -186,7 +186,7 @@ class DynamicArray():
             return
         
         if not isinstance(k, int):
-            raise TypeError("k must me and integer")
+            raise TypeError("k must be an integer")
         
         if not isinstance(right, bool):
             raise TypeError("right must be a boolean")
