@@ -1,4 +1,12 @@
+# Python 
 __pycache__/
 *.pyc 
+*.pyo 
+*.pyd 
 .vscode/
 .env
+# Pytest
+.pytest_cache/
+# Coverage
+.coverage
+htmlcov/
