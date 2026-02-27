@@ -164,7 +164,55 @@ class DynamicArray():
                 self._array[write] = self._array[read]
                 write += 1
         self._size = write
-         
+    
+    # Rotating elements by k steps 
+    def _reverse(self, start, end):
+        while start < end:
+            (self._array[start], self._array[end]) = (self._array[end],
+                                                      self._array[start])
+            start = start + 1
+            end = end - 1
+    
+    def rotate(self, k: int, right: bool = True) -> None:
+        """
+        Rotate the array by k steps.
+
+        Parameters:
+            k (int): Number of steps to rotate.
+            right (bool): If True, rotate left. If False, rotate left.
+
+        """
+        if self._size == 0:
+            return
+        
+        if not isinstance(k, int):
+            raise TypeError("k must me and integer")
+        
+        if not isinstance(right, bool):
+            raise TypeError("right must be a boolean")
+        
+        if k < 0:
+            raise ValueError("k must be non negative")
+
+        # handling k > self._size
+        k = k % self._size 
+
+        if k == 0:
+            return
+        
+        # Converting left rotation equivalent to right rotation
+        if not right:
+            k = self._size - k 
+        
+        #Step 1 - reverse all the elements
+        self._reverse(0, self._size-1)
+
+        #Step 2 - reverse first k elements
+        self._reverse(0,k-1)
+
+        #Step 3 - reverse the remaining elements
+        self._reverse(k, self._size-1)
+
 
 if __name__ == "__main__":
     a = DynamicArray()
