@@ -47,12 +47,37 @@ def max_sum_subarray(nums: list[int], k: int) -> int:
         right = right + 1
         left = left + 1 
     return max_sum
+
+# Longest Substring With At Most K Distinct Characters
+"""
+Problem: Given a string s and integer k, return the 
+length of the longest substring that contains at most
+k distinct characters.
+"""
+def longest_substring_k_distinct(s: str, k: int) -> int:
+    left = 0 
+    max_len = 0 
+    freq = {}
+
+    for right in range(len(s)):
+        char = s[right]
+        freq[char] = freq.get(char, 0) + 1 
+
+        while len(freq) > k:
+            left_char = s[left]
+            freq[left_char] = freq[left_char] - 1 
+            if freq[left_char] == 0:
+                del freq[left_char]
+            left = left + 1
+        max_len = max(max_len, right - left + 1)
+    
+    return max_len
         
+
 def main():
-   nums = [1, 2, 3, 3, 4, 5, 5]
-   k = 3
-   print(max_sum_subarray(nums, k))
+   s = "abcdc"
+   k =2
+   print(longest_substring_k_distinct(s, k))
 
 if __name__ == "__main__":
     main()
-
