@@ -13,7 +13,7 @@ The goal is to build deep understanding of how systems behave under the hood.
 
 ## Project Structure
 
-core_dsa/        → Data structure implementations  
+core_dsa/        → Core data structures and algorithmic patterns  
 tests/           → Unit tests (pytest)   
 
 --- 
