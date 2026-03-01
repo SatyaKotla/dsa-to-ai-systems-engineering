@@ -56,9 +56,33 @@ def subarray_sum_max(nums: list[int]) -> int:
     
     return maximum_sum
 
+# Maximum Product Subarray
+"""
+Problem: Given an integer array nums, return the maximum product
+of a contiguous subarray. 
+"""
+def subarray_product_max(nums: list[int]) -> int:
+    if not nums:
+        return 0 
+    maximum_product = nums[0]
+    minimum_product = nums[0]
+    result = nums[0]
+
+    for i in range(1, len(nums)):
+        temp_max = maximum_product
+        maximum_product = max(nums[i],
+                              nums[i]*temp_max,
+                              nums[i]*minimum_product)
+        minimum_product = min(nums[i],
+                              nums[i]*temp_max,
+                              nums[i]*minimum_product)
+        result = max(result, maximum_product)
+    
+    return result
+
 def main():
-    nums = [-2, 1, -3, 4, -1, 2, 1, -6, 1]
-    print(subarray_sum_max(nums))
+    nums = [-2, 3, 4, -5, -1]
+    print(subarray_product_max(nums))
 
 if __name__ == "__main__":
     main()
