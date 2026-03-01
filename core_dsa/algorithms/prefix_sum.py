@@ -38,10 +38,27 @@ def subarray_sum_multiples_of_k(nums: list[int], k: int) -> bool:
             seen[remainder] = i 
     return False
 
+# Kadane's algorithm
+"""
+Problem: Given an integer array nums, return the maximum
+sum of any contiguous array. 
+"""
+def subarray_sum_max(nums: list[int]) -> int:
+    if not nums:
+        return 0 
+    # variable intiation at index 0
+    current_sum = nums[0]
+    maximum_sum = nums[0]
+
+    for i in range(1, len(nums)):
+        current_sum = max(nums[i], current_sum + nums[i])
+        maximum_sum = max(maximum_sum, current_sum)
+    
+    return maximum_sum
+
 def main():
-    nums = [1, -1, 1,1]
-    k = 2
-    print(subarray_sum_multiples_of_k(nums, k))
+    nums = [-2, 1, -3, 4, -1, 2, 1, -6, 1]
+    print(subarray_sum_max(nums))
 
 if __name__ == "__main__":
     main()
