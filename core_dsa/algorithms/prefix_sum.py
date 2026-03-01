@@ -80,9 +80,51 @@ def subarray_product_max(nums: list[int]) -> int:
     
     return result
 
+# 2D Kadane's Algorithm
+"""
+Problem: Given a 2D matrix, find the sub-rectangle with 
+maximum sum
+"""
+def sub_rectangle_sum_max(matrix: list[list[int]]) -> int:
+    if not matrix or not matrix[0]:
+        return 0 
+    
+    rows = len(matrix)
+    columns = len(matrix[0])
+
+    maximum_sum = float("-inf")
+
+    # Fix the left column 
+    for left in range(columns):
+        temp = [0]*rows
+
+        # expand the right column:
+        for right in range(left, columns):
+
+            # compress rows
+            for r in range(rows):
+                temp[r] += matrix[r][right]
+            
+            # apply 1D Kadane's algorithm on the temp 
+            current_sum = temp[0]
+            best_sum = temp[0]
+
+            for i in range(1, rows):
+                current_sum = max(temp[i], current_sum + temp[i])
+                best_sum = max(best_sum, current_sum)
+            
+            maximum_sum = max(maximum_sum, best_sum)
+    
+    return maximum_sum
+
 def main():
-    nums = [-2, 3, 4, -5, -1]
-    print(subarray_product_max(nums))
+    matrix = [
+        [1, 2, -1, -2, -20],
+        [-8, -3, 4, 3, 1],
+        [3, 4, 11, 12, 3],
+        [-4, -1, 2, 3, -9]
+    ]
+    print(sub_rectangle_sum_max((matrix)))
 
 if __name__ == "__main__":
     main()
