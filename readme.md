@@ -8,6 +8,7 @@ The goal is to build deep understanding of how systems behave under the hood.
 ## Current Implementations
 
 - Dynamic Array 
+- Algorithmic Patterns(Sliding Window, Prefix Sum, Kadane Variants)
 
 --- 
 
