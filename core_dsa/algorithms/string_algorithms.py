@@ -1,6 +1,8 @@
 """
 String manipulation and text-processing algorithms. 
 """
+import string 
+import heapq
 
 # Basic word frequency counter
 """
@@ -23,8 +25,6 @@ def word_frequency(text: str) -> dict[str, int]:
 """
 Case-insensitive and removes punctuation
 """
-import string
-
 def word_frequency_2(text: str) -> dict[str, int]:
     
     # normalize the case in text input
@@ -64,7 +64,6 @@ def top_k_frequent_words(text: str,
     return sorted_words[:k]
 
 
-import heapq
 def top_k_frequent_words_heap(text: str,
                               k: int) -> list[tuple[str, int]]:
     """
@@ -88,10 +87,58 @@ def top_k_frequent_words_heap(text: str,
 
     return [(word, count) for count, word in result]
 
+#------------------------------------------------------#
+#######BUILDING STREAMING COUNTER#######################
+#------------------------------------------------------#
+"""
+Goal: Build a class that 
+1. Accepts words one by one
+2. Updates frequency
+3. Can return top-k at anytime.
+"""
+# Basic Streaming Counter
+class StreamingWordCounter():
+    
+    def __init__(self):
+        self.frequency = {}
+    
+    def add_word(self, word: str) -> None:
+        
+        # Normalize the words
+        word = word.lower()
+        word = word.strip(string.punctuation)
+
+        if not word:
+            return
+        
+        self.frequency[word] = self.frequency.get(word, 0) + 1
+
+    def add_text(self, text: str) -> None:
+        words = text.split()
+        for word in words:
+            self.add_word(word)
+    
+    def get_top_k_frequent_words(self, 
+                            k: int) -> list[tuple[str, int]] :
+        heap = []
+
+        for word, count in self.frequency.items():
+            heapq.heappush(heap, (count, word))
+
+            # heap size limited to k
+            if len(heap) > k:
+                heapq.heappop(heap)
+        result = sorted(heap, reverse=True)
+        return [(word, count) for count, word in result]
+
 
 def main():
-    text = "AI is powerful. AI is amazing and AI is evovling."
-    print(top_k_frequent_words_heap(text, k=2))
+    word_counter = StreamingWordCounter()
+    word_counter.add_word("AI")
+    word_counter.add_word("Is")
+    word_counter.add_word("AI")
+
+    print(word_counter.get_top_k_frequent_words(1))
 
 if __name__ == "__main__":
     main()
