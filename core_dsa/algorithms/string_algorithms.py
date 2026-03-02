@@ -3,6 +3,7 @@ String manipulation and text-processing algorithms.
 """
 import string 
 import heapq
+from collections import deque
 
 # Basic word frequency counter
 """
@@ -119,7 +120,7 @@ class StreamingWordCounter():
             self.add_word(word)
     
     def get_top_k_frequent_words(self, 
-                            k: int) -> list[tuple[str, int]] :
+                            k: int) -> list[tuple[str, int]]:
         heap = []
 
         for word, count in self.frequency.items():
@@ -131,14 +132,54 @@ class StreamingWordCounter():
         result = sorted(heap, reverse=True)
         return [(word, count) for count, word in result]
 
+# Streaming Counter With Sliding Window 
+
+class SlidingWindowWordCounter():
+    def __init__(self, window_size: int):
+        self.window_size =  window_size
+        self.window = deque()
+        self.frequency = {}
+
+    def add_word(self, word: int) -> None:
+        word = word.lower()
+        word = word.strip(string.punctuation)
+
+        if not word:
+            return
+        
+        # Add the new word
+        self.window.append(word)
+        self.frequency[word] = self.frequency.get(word, 0) + 1
+
+        # Remove the last word if window > window_size
+        if len(self.window) > self.window_size:
+            old_word = self.window.popleft()
+            self.frequency[old_word] -= 1
+            if self.frequency[old_word] == 0:
+                del self.frequency[old_word]
+
+    def get_top_k_frequent_words(self, 
+                            k: int) -> list[tuple[str, int]]:
+        heap = []
+
+        for word, count in self.frequency.items():
+            heapq.heappush(heap, (count, word))
+            if len(heap) > k:
+                heapq.heappop(heap)
+        
+        result = sorted(heap, reverse=True)
+        return [(word, count) for count, word in result]
+    
+
 
 def main():
-    word_counter = StreamingWordCounter()
+    word_counter = SlidingWindowWordCounter(2)
     word_counter.add_word("AI")
     word_counter.add_word("Is")
     word_counter.add_word("AI")
+    word_counter.add_word("Powerful")
 
-    print(word_counter.get_top_k_frequent_words(1))
+    print(word_counter.get_top_k_frequent_words(2))
 
 if __name__ == "__main__":
     main()
