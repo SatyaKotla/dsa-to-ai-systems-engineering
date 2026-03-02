@@ -43,9 +43,55 @@ def word_frequency_2(text: str) -> dict[str, int]:
     
     return frequency
 
+# Return Top-K Frequent Words
+"""
+Problem: Given text and k, return the k most frequent words. 
+"""
+def top_k_frequent_words(text: str, 
+                         k: int)-> list[tuple[str, int]]:
+    """
+    Returns top k frequent words by sorting the words
+    descending based on frequency.
+    Time complexity : O(n + m*logm) where m is number of 
+                    unique words
+    """
+    freq = word_frequency_2(text)
+
+    # sort by frequency descending
+    sorted_words = sorted(freq.items()
+                          , key=lambda x:x[1],
+                            reverse=True)
+    return sorted_words[:k]
+
+
+import heapq
+def top_k_frequent_words_heap(text: str,
+                              k: int) -> list[tuple[str, int]]:
+    """
+    Returns top k frequent words using a min-heap.
+    Time complexity : O(n + m*logk) where m is number of 
+                    unique words
+    """
+    freq = word_frequency_2(text)
+
+    heap = []
+
+    for word, count in freq.items():
+        heapq.heappush(heap, (count, word))
+
+        # heap size limited to k
+        if len(heap) > k:
+            heapq.heappop(heap)
+    
+    # convert heap to descending order
+    result = sorted(heap, reverse=True)
+
+    return [(word, count) for count, word in result]
+
+
 def main():
-    text = "AI is powerful. AI is amazing!"
-    print(word_frequency_2(text))
+    text = "AI is powerful. AI is amazing and AI is evovling."
+    print(top_k_frequent_words_heap(text, k=2))
 
 if __name__ == "__main__":
     main()
