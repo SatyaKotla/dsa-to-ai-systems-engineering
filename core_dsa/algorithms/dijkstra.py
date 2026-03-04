@@ -12,6 +12,10 @@ def dijkstra(graph, source):
         distances: dict mapping vertex 
                                     -> shortest distance  
     """
+    # Check for negative edges
+    if graph.negative_edge_count > 0:
+        raise ValueError("Dijkstra cannot handle" \
+                    "negative weights")
     
     # Initialize distances
     distances = {}

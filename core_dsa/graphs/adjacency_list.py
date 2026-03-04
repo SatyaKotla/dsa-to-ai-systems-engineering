@@ -10,6 +10,7 @@ class Graph():
     def __init__(self, directed: bool = True):
         self._adj = {}
         self._directed = directed
+        self.negative_edge_count = 0
     
     def add_vertex(self, vertex):
         """Add a vertex to a graph."""
@@ -23,6 +24,9 @@ class Graph():
         """
         self.add_vertex(u)
         self.add_vertex(v)
+
+        if weight < 0:
+            self.negative_edge_count += 1
 
         self._adj[u].append((v, weight))
         
