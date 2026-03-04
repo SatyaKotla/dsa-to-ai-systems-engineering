@@ -48,7 +48,8 @@ class IndexedPriorityQueue():
 
         # If not root and violates the heap property with parent
         # go up
-        if index > 0 and self._compare(index, parent_index):
+        if index > 0 and self._compare(self._heap[index],
+                                        self._heap[parent_index]):
             self._heapify_up(index)
         else:
             self._heapify_down(index)
@@ -83,7 +84,7 @@ class IndexedPriorityQueue():
     
         # Restore heap property (previous last shifted to index)
         if index > 0 and self._compare(self._heap[index], 
-                                       self._heap[self._parent[index]]):
+                                       self._heap[self._parent(index)]):
             self._heapify_up(index)
         else:
             self._heapify_down(index)
