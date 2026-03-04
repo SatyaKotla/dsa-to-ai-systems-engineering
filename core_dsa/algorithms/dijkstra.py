@@ -21,6 +21,9 @@ def dijkstra(graph, source):
     
     distances[source] = 0
 
+    # Initializing previous to keep track of path
+    previous = {v: None for v in graph.vertices()}
+
     # Create minimum priority queue
     priority_queue = IndexedPriorityQueue(
                 is_min_heap=True)
@@ -39,6 +42,7 @@ def dijkstra(graph, source):
 
             if new_distance < distances[neighbor]:
                 distances[neighbor] = new_distance
+                previous[neighbor] = current
 
                 if priority_queue.contains(neighbor):
                     priority_queue.update(neighbor, 
@@ -47,10 +51,22 @@ def dijkstra(graph, source):
                     priority_queue.insert(neighbor,
                                           new_distance)
     
-    return distances
-                
+    return distances, previous
+
+# A helper function to reconstruct path
+def reconstruct_path(previous, target):
+    path = []
+    current = target
+
+    while current is not None:
+        path.append(current)
+        current = previous[current]
+    
+    path.reverse()
+    return path 
+
 def main():
-    pass 
+    pass
 
 if __name__ == "__main__":
     main()
