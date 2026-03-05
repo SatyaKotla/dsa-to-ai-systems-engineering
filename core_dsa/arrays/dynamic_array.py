@@ -1,9 +1,9 @@
-#dynamic array 
-class DynamicArray():
-    def __init__(self, iterable = None):
-        self._max_len = 1 # capacity of the array
-        self._size = 0 # actual size of the array
-        self._array = [None] * self._max_len # array
+# dynamic array
+class DynamicArray:
+    def __init__(self, iterable=None):
+        self._max_len = 1  # capacity of the array
+        self._size = 0  # actual size of the array
+        self._array = [None] * self._max_len  # array
 
         if iterable is not None:
             try:
@@ -16,30 +16,30 @@ class DynamicArray():
         if self._size == self._max_len:
             self._resize()
 
-        self._array[self._size] = item 
+        self._array[self._size] = item
         self._size += 1
-    
+
     def _resize(self):
-        self._max_len = self._max_len * 2 
+        self._max_len = self._max_len * 2
         new_array = [None] * self._max_len
-        
+
         for i in range(self._size):
             new_array[i] = self._array[i]
-        
+
         self._array = new_array
 
     def __len__(self):
         return self._size
-    
+
     def __getitem__(self, index):
         if index < 0:
-            index = self._size + index 
-        
+            index = self._size + index
+
         if index < 0 or index >= self._size:
             raise IndexError("Index is out of range")
-        
+
         return self._array[index]
-    
+
     # to access the element to set value to at the index position
     def __setitem__(self, index, value):
         if index < 0:
@@ -47,19 +47,19 @@ class DynamicArray():
 
         if index < 0 or index >= self._size:
             raise IndexError("Index is out of range")
-        
+
         self._array[index] = value
-    
+
     # for looping the elements directly
     def __iter__(self):
         for i in range(self._size):
             yield self._array[i]
-    
+
     # to get the array without the other memory values
     def to_list(self):
-        return self._array[:self._size]
-    
-    def insert(self, index,value):
+        return self._array[: self._size]
+
+    def insert(self, index, value):
         # Handling negative index
         if index < 0:
             index = self._size + index
@@ -67,14 +67,14 @@ class DynamicArray():
         # Allowing insertion at the end (index == self.size)
         if index < 0 or index > self._size:
             raise IndexError("Index is out of range")
-        
-        #Resize if full
+
+        # Resize if full
         if self._size == self._max_len:
-                self._resize()
+            self._resize()
         for i in range(self._size, index, -1):
             self._array[i] = self._array[i - 1]
 
-        #Insertion
+        # Insertion
         self._array[index] = value
         self._size = self._size + 1
 
@@ -82,46 +82,45 @@ class DynamicArray():
         if self._size == 0:
             raise IndexError("Popping from an empty array.")
         value = self._array[self._size - 1]
-        self._array[self._size - 1] = None 
+        self._array[self._size - 1] = None
         self._size = self._size - 1
 
-        # shrink the capacity of the array if size is less than 
+        # shrink the capacity of the array if size is less than
         # 1/4th of the capacity
-        if self._size > 0 and self._size <= self._max_len //4:
+        if self._size > 0 and self._size <= self._max_len // 4:
             self._shrink()
-        return value 
-    
-    
+        return value
+
     def _shrink(self):
         self._max_len = self._max_len // 2
-        new_array = [None] * self._max_len 
+        new_array = [None] * self._max_len
 
         for i in range(self._size):
             new_array[i] = self._array[i]
-        
-        self._array =  new_array 
-    
+
+        self._array = new_array
+
     def delete(self, index):
         if index < 0:
             index = self._size + index
-        
+
         if index < 0 and index >= self._size:
             raise IndexError("Index is out of range.")
-        
+
         value = self._array[index]
 
-        #shift left
-        for i in range(index, self._size-1):
+        # shift left
+        for i in range(index, self._size - 1):
             self._array[i] = self._array[i + 1]
-        
-        self._array[self._size -1] = None 
+
+        self._array[self._size - 1] = None
         self._size = self._size - 1
 
-        if self._size > 0 and self._size <= self._max_len//4 :
+        if self._size > 0 and self._size <= self._max_len // 4:
             self._shrink()
-        
-        return (value)
-    
+
+        return value
+
     # Reverse an Array (In - Place)
     """
     Reverse elements without creating a new array.
@@ -130,55 +129,60 @@ class DynamicArray():
     Output: [4, 3, 2, 1]
 
     """
+
     def reverse(self):
         i = 0
         while i < self._size // 2:
-            (self._array[i], self._array[self._size-1 - i]) = (self._array[self._size-1 - i], 
-                                                self._array[i])
-            i = i+1
+            self._array[i], self._array[self._size - 1 - i] = (
+                self._array[self._size - 1 - i],
+                self._array[i],
+            )
+            i = i + 1
 
     # Finding the maximum element in the array
     def max(self):
         if self._size == 0:
             raise ValueError("The array is empty.")
-        
+
         max_value = self._array[0]
-        
+
         for i in range(1, self._size):
             if self._array[i] > max_value:
                 max_value = self._array[i]
-        
+
         return max_value
-    
+
     # function to check if the array is sorted
     def _is_sorted(self):
         for i in range(1, self._size):
-            if self._array[i] < self._array[i-1]:
-                return False 
+            if self._array[i] < self._array[i - 1]:
+                return False
         return True
-    
+
     # Removing duplicates from a sorted array in place
     def remove_duplicates_sorted(self):
         if not self._is_sorted():
             raise ValueError("The array must be sorted to remove duplicates in place.")
         if self._size == 0:
-            return 
-        write = 1 
+            return
+        write = 1
 
         for read in range(1, self._size):
-            if self._array[read] != self._array[read-1]:
+            if self._array[read] != self._array[read - 1]:
                 self._array[write] = self._array[read]
                 write += 1
         self._size = write
-    
-    # Rotating elements by k steps 
+
+    # Rotating elements by k steps
     def _reverse(self, start, end):
         while start < end:
-            (self._array[start], self._array[end]) = (self._array[end],
-                                                      self._array[start])
+            self._array[start], self._array[end] = (
+                self._array[end],
+                self._array[start],
+            )
             start = start + 1
             end = end - 1
-    
+
     def rotate(self, k: int, right: bool = True) -> None:
         """
         Rotate the array by k steps.
@@ -190,45 +194,48 @@ class DynamicArray():
         """
         if self._size == 0:
             return
-        
+
         if not isinstance(k, int):
             raise TypeError("k must be an integer")
-        
+
         if not isinstance(right, bool):
             raise TypeError("right must be a boolean")
-        
+
         if k < 0:
             raise ValueError("k must be non negative")
 
         # handling k > self._size
-        k = k % self._size 
+        k = k % self._size
 
         if k == 0:
             return
-        
+
         # Converting left rotation equivalent to right rotation
         if not right:
-            k = self._size - k 
-        
-        #Step 1 - reverse all the elements
-        self._reverse(0, self._size-1)
+            k = self._size - k
 
-        #Step 2 - reverse first k elements
-        self._reverse(0,k-1)
+        # Step 1 - reverse all the elements
+        self._reverse(0, self._size - 1)
 
-        #Step 3 - reverse the remaining elements
-        self._reverse(k, self._size-1)
+        # Step 2 - reverse first k elements
+        self._reverse(0, k - 1)
+
+        # Step 3 - reverse the remaining elements
+        self._reverse(k, self._size - 1)
+
 
 def _demo() -> None:
-    """ Minimal manual demo for quick verification."""
+    """Minimal manual demo for quick verification."""
     a = DynamicArray([1, 2, 3])
     a.append(4)
     a.reverse()
     print(f"Demo output: {a.to_list()}")
 
+
 def main() -> None:
     "Entry point for manual execution."
     _demo()
+
 
 if __name__ == "__main__":
     main()

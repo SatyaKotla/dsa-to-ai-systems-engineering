@@ -1,7 +1,7 @@
-# test here 
-from core_dsa.algorithms.dijkstra import (dijkstra, 
-                                        reconstruct_path)
+# test here
+from core_dsa.algorithms.dijkstra import dijkstra, reconstruct_path
 from core_dsa.graphs.adjacency_list import Graph
+
 
 def main():
     g = Graph(directed=True)
@@ -14,9 +14,9 @@ def main():
 
     print(f"Distances: {distances}")
 
-    path_to_d = reconstruct_path(previous=previous,
-                                    target="D")
+    path_to_d = reconstruct_path(previous=previous, target="D")
     print(f"Path from A to D: {path_to_d}")
+
 
 if __name__ == "__main__":
     main()

@@ -1,30 +1,26 @@
 ####################################################
-########## TESTS FOR INDEXED PRIORITY QUEUE#########
+# ------- TESTS FOR INDEXED PRIORITY QUEUE ------- #
 ####################################################
 from core_dsa.heap.indexed_priority_queue import IndexedPriorityQueue
 import pytest
+
 
 # Basic ordering property
 def test_ipq_pop_returns_sorted_order():
     ipq = IndexedPriorityQueue()
 
-    data = {
-        "a": 5,
-        "b": 1,
-        "c": 3,
-        "d": 2
+    data = {"a": 5, "b": 1, "c": 3, "d": 2}
 
-    }
-    
     for key, priority in data.items():
         ipq.insert(key, priority)
-    
+
     result = []
-    
+
     while not ipq.is_empty():
         result.append(ipq.pop()[1])
-    
+
     assert result == sorted(data.values())
+
 
 # Decrease-Key Behavior
 def test_ipq_decrease_priority_moves_up():
@@ -38,6 +34,7 @@ def test_ipq_decrease_priority_moves_up():
 
     # c should be at the root
     assert ipq._heap[0] == "c"
+
 
 # Increase-Key Behvaior
 def test_ipq_increase_priority_moves_down():
@@ -53,6 +50,7 @@ def test_ipq_increase_priority_moves_down():
     # a should not be at the root
     assert ipq._heap[0] != "a"
 
+
 # Remove Key
 def test_ipq_remove_key():
     ipq = IndexedPriorityQueue()
@@ -65,12 +63,14 @@ def test_ipq_remove_key():
     assert not ipq.contains("a")
     assert ipq.size() == 1
 
+
 # Empty Pop Error
 def test_ipq_pop_empty_raises():
     ipq = IndexedPriorityQueue()
 
     with pytest.raises(IndexError):
         ipq.pop()
+
 
 # Internal Consistency Invariance Test
 def test_ipq_internal_consistency():
@@ -83,11 +83,11 @@ def test_ipq_internal_consistency():
     # Check position map matches heap structure
     for index, key in enumerate(ipq._heap):
         assert ipq._position[key] == index
-    
+
     # Check all keys in position map exists in heap
     for key in ipq._position:
         assert key in ipq._heap
-    
+
     # Check priorities exist for all Keys
     for key in ipq._heap:
         assert key in ipq._priorities

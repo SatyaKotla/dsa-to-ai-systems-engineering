@@ -1,4 +1,4 @@
-class IndexedPriorityQueue():
+class IndexedPriorityQueue:
     """
     Index Priority Queue supporting O(log(n)) insert, update, and removal.
 
@@ -7,11 +7,11 @@ class IndexedPriorityQueue():
     """
 
     def __init__(self, is_min_heap: bool = True):
-        self._heap = []              # list of keys (unique element)
-        self._priorities = {}        # key -> priority (score)
-        self._position = {}          # key -> index in heap (rank)
+        self._heap = []  # list of keys (unique element)
+        self._priorities = {}  # key -> priority (score)
+        self._position = {}  # key -> index in heap (rank)
         self._is_min_heap = is_min_heap
-    
+
     # -----------------------------------------------
     # Public API
     # -----------------------------------------------
@@ -23,12 +23,12 @@ class IndexedPriorityQueue():
         """
         if key in self._position:
             raise ValueError("Key already exists.")
-        
+
         self._priorities[key] = priority
         self._heap.append(key)
 
         index = len(self._heap) - 1
-        self._position[key] = index 
+        self._position[key] = index
 
         self._heapify_up(index)
 
@@ -39,21 +39,19 @@ class IndexedPriorityQueue():
         """
         if key not in self._position:
             raise ValueError("Key does not exist.")
-        
+
         # update the new priority
         self._priorities[key] = new_priority
-        
+
         index = self._position[key]
         parent_index = self._parent(index)
 
         # If not root and violates the heap property with parent
         # go up
-        if index > 0 and self._compare(self._heap[index],
-                                        self._heap[parent_index]):
+        if index > 0 and self._compare(self._heap[index], self._heap[parent_index]):
             self._heapify_up(index)
         else:
             self._heapify_down(index)
-
 
     def remove(self, key):
         """
@@ -62,7 +60,7 @@ class IndexedPriorityQueue():
         """
         if key not in self._position:
             raise ValueError("Key does not exist")
-        
+
         index = self._position[key]
         last_index = len(self._heap) - 1
 
@@ -72,7 +70,7 @@ class IndexedPriorityQueue():
             del self._position[key]
             del self._priorities[key]
             return
-        
+
         # swap with the last element
         self._swap(index, last_index)
 
@@ -81,15 +79,14 @@ class IndexedPriorityQueue():
 
         del self._position[key]
         del self._priorities[key]
-    
+
         # Restore heap property (previous last shifted to index)
-        if index > 0 and self._compare(self._heap[index], 
-                                       self._heap[self._parent(index)]):
+        if index > 0 and self._compare(
+            self._heap[index], self._heap[self._parent(index)]
+        ):
             self._heapify_up(index)
         else:
             self._heapify_down(index)
-
-
 
     def pop(self):
         """
@@ -97,7 +94,7 @@ class IndexedPriorityQueue():
         """
         if not self._heap:
             raise IndexError("Heap is empty")
-        
+
         root_key = self._heap[0]
         root_priority = self._priorities[root_key]
 
@@ -116,9 +113,8 @@ class IndexedPriorityQueue():
         # heapify down with new root
         if self._heap:
             self._heapify_down(0)
-        
-        return (root_key, root_priority)
 
+        return (root_key, root_priority)
 
     def peek(self):
         """
@@ -146,16 +142,16 @@ class IndexedPriorityQueue():
         Return True if queue is empty.
         """
         return not self._heap
-    
+
     def __len__(self):
         return len(self._heap)
-    
+
     def __contains__(self, key):
         return key in self._position
-    
+
     def __bool__(self):
         return bool(self._heap)
-    
+
     def clear(self):
         self._heap.clear()
         self._position.clear()
@@ -166,10 +162,10 @@ class IndexedPriorityQueue():
     # -----------------------------------------------
 
     def _heapify_up(self, index):
-        
+
         while index > 0:
             parent = self._parent(index)
-            
+
             if self._compare(self._heap[index], self._heap[parent]):
                 self._swap(index, parent)
                 index = parent
@@ -177,42 +173,43 @@ class IndexedPriorityQueue():
                 break
 
     def _heapify_down(self, index):
-        
+
         size = len(self._heap)
 
         while True:
             left = 2 * index + 1
-            right = 2 * index + 2 
+            right = 2 * index + 2
             current_best = index
 
             # check left child
-            if left < size and self._compare(self._heap[left], 
-                                             self._heap[current_best]):
-                current_best = left 
-           
+            if left < size and self._compare(
+                self._heap[left], self._heap[current_best]
+            ):
+                current_best = left
+
             # check right child
-            if right < size and self._compare(self._heap[right], 
-                                             self._heap[current_best]):
-                current_best = right 
-            
+            if right < size and self._compare(
+                self._heap[right], self._heap[current_best]
+            ):
+                current_best = right
+
             # If no better child found, stop
             if current_best == index:
-                break 
+                break
 
             # Otherwise swap and continue
             self._swap(index, current_best)
             index = current_best
 
     def _swap(self, i, j):
-        self._heap[i], self._heap[j] = (self._heap[j],
-                                        self._heap[i])
+        self._heap[i], self._heap[j] = (self._heap[j], self._heap[i])
         # update position to reflect the change in heap
-        self._position[self._heap[i]] = i 
+        self._position[self._heap[i]] = i
         self._position[self._heap[j]] = j
 
     def _compare(self, key1, key2) -> bool:
         """
-        Return True if key1 should come before key2. 
+        Return True if key1 should come before key2.
         """
         if self._is_min_heap:
             return self._priorities[key1] < self._priorities[key2]
@@ -220,7 +217,7 @@ class IndexedPriorityQueue():
             return self._priorities[key1] > self._priorities[key2]
 
     def _parent(self, index):
-        parent_index = (index - 1) // 2 
+        parent_index = (index - 1) // 2
         return parent_index
 
     def _left(self, index):
@@ -231,8 +228,10 @@ class IndexedPriorityQueue():
         right_index = 2 * index + 2
         return right_index
 
+
 def main() -> None:
-    pass 
+    pass
+
 
 if __name__ == "__main__":
     main()
