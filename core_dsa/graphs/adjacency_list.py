@@ -45,6 +45,40 @@ class Graph:
         """
         return self._adj.keys()
 
+    def edges(self):
+        """
+        Yield all edges in the graph as (u, v, weight).
+        """
+        for u in self._adj:
+            for v, w in self._adj[u]:
+                yield (u, v, w)
+
+    def remove_edge(self, u, v):
+        """
+        Directed Graph: Remove an edge from u to v.
+                    (u -> v)
+
+        Undirected Graph: Remove both edges from u to v
+                            and v to u.
+                    (u -> v and v -> u )
+        """
+        if u in self._adj:
+            self._remove_single_edge(u, v)
+
+        if not self._directed and v in self._adj:
+            self._remove_single_edge(v, u)
+
+    def _remove_single_edge(self, u, v):
+        new_neighbors = []
+        for neighbor, weight in self._adj[u]:
+            if neighbor == v:
+                if weight < 0:
+                    self.negative_edge_count -= 1
+            else:
+                new_neighbors.append((neighbor, weight))
+
+        self._adj[u] = new_neighbors
+
     def __contains__(self, vertex):
         return vertex in self._adj
 
