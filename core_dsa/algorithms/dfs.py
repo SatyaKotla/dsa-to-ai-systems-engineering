@@ -66,3 +66,67 @@ def reconstruct_path(parent, source, target):
         return path
 
     return []
+
+
+# DFS using iterative method
+
+
+def dfs_iterative(graph, source):
+    """
+    Iterative Depth First Search
+
+    Returns:
+        {
+            "order": traversal order,
+            "parent": parent mapping,
+            "discovery": discovery time,
+            "finish": finish time
+        }
+    """
+
+    visited = set()  # to keep track of visited nodes
+
+    order = []
+    parent = {}
+    discovery = {}
+    finish = {}
+
+    time = 0  # global time counter
+
+    stack = []  # to store (node, iterator_of_neighbors)
+
+    # visit the source
+    visited.add(source)
+    parent[source] = None
+
+    time += 1
+    discovery[source] = time
+    order.append(source)
+
+    stack.append((source, iter(graph.neighbors(source))))
+
+    while stack:
+        node, neighbors = stack[-1]
+
+        try:
+            neighbor, _ = next(neighbors)
+
+            if neighbor not in visited:
+
+                visited.add(neighbor)
+                parent[neighbor] = node
+
+                time += 1
+                discovery[neighbor] = time
+                order.append(neighbor)
+
+                stack.append((neighbor, iter(graph.neighbors(neighbor))))
+
+        except StopIteration:
+
+            stack.pop()
+
+            time += 1
+            finish[node] = time
+
+    return {"order": order, "parent": parent, "discovery": discovery, "finish": finish}
