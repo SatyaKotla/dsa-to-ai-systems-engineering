@@ -1,24 +1,32 @@
 # Algorithms
 
-This folder contains implementations of core algorithmic patterns.
+This folder contains implementations of fundamental algorithms used in data processing, graph traversal, optimization, and string processing.
 
-## Patterns Covered
+## Array Techniques
 
-### Sliding Window
-- Longest Substring without repeating characters
-- Maximum Sum Subarray of Size K
-- Longest Substring With At Most K Distinct Characters
+| Algorithm  |      Description    |  Time |  Space |
+|----------|:-------------|:------:|:------:|
+| [Sliding Window](./sliding_window.py) |  Efficient processing of subarrays | TBD | TBD |
+|[Prefix Sum](./prefix_sum.py) |    Precomputed cumulative arrays   |   TBD | TBD |
+|[Kadane's Algorithm](./kadane.py) | Maximum subarray (sum, product, etc.) |  TBD |TBD |
 
-### Prefix Sum
-- Subarray Sum Equals K
-- Continous Subarray Sum (Multiple of K)
+## String & Text-Processing Algorithms
 
-### Kadane's Algorithm (Optimization Patterns)
-- Maximum Subarray
-- Maximum Product Subarray
-- Maximum Sum Rectangle (2D Kadane)
+| Algorithm  |      Description    |  Time |  Space |
+|----------|:-------------|:------:|:------:|
+| [Word Frequency](./string_algorithms.py) |  Word count computation | TBD | TBD |
+|[Top-K Frequency](./string_algorithms.py) |    Finding k most frequent words   |   TBD | TBD |
+|[Streaming Counter](./string_algorithms.py) | Dynamic word count |   TBD | TBD |
 
-## Goals
-- Understand problem-solving patterns deeply
-- Focus on time/space complexity optimization
-- Write clean, quality implementations
+## Graph Algorithms
+
+| Algorithm  |      Description    |  Time | Space |
+|----------|:-------------|:------:|:------:|
+| [Breadth-First Search (BFS)](./bfs.py) |  Breadth-first traversal | TBD |TBD |
+|[Depth-First Search (recursive)](./dfs.py) |    Depth-first traversal   |   TBD |TBD |
+|[Depth-First Search (iterative)](./dfs.py) | Stack-based DFS |    TBD |TBD |
+|[Dijkstra](./dijkstra.py) | Shortest path (positive weights) |    TBD |TBD |
+|[Topological Sort](./topological_sort.py) | Ordering of DAG nodes |    TBD |TBD |
+
+
+Note: Complexity values marked as `TBD` will be documented as part of the algorithm documentation updates.
