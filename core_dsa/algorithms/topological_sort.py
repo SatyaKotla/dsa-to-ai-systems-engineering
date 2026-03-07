@@ -11,10 +11,7 @@ def topological_sort(graph):
     Raises: Value Error if the graph is undirected.
     """
     if not graph._directed:
-        raise ValueError(
-            """Topological sort requires
-                         a directed graph."""
-        )
+        raise ValueError("Topological sort requires " "a directed graph.")
 
     result = dfs_iterative(graph)
 
