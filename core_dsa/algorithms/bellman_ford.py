@@ -53,3 +53,41 @@ def reconstruct_path(previous, target):
 
     path.reverse()
     return path
+
+
+# bellman ford optimized with early termination
+
+
+def bellman_ford_optim(graph, source):
+    """
+    Bellman-Ford algorithm with early termination
+    optimization.
+    """
+    # Step 1: initialize weights
+    distances = {v: float("inf") for v in graph.vertices()}
+    distances[source] = 0
+
+    # Initialize previous to keep track of path
+    previous = {v: None for v in graph.vertices()}
+
+    # Step 2: relaxa edge weights V-1 times
+    for _ in range(len(graph.vertices()) - 1):
+
+        updated = False
+
+        for u, v, w in graph.edges():
+            if distances[u] != float("inf") and distances[u] + w < distances[v]:
+                distances[v] = distances[u] + w
+                previous[v] = u
+                updated = True
+
+        # Early stopping condition
+        if not updated:
+            break
+
+    # Step 3: detect negative cycle
+    for u, v, w in graph.edges():
+        if distances[u] != float("inf") and distances[u] + w < distances[v]:
+            raise ValueError("Graph contains a " "negative weight cycle")
+
+    return distances, previous
