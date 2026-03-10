@@ -30,5 +30,6 @@ This folder contains implementations of fundamental algorithms used in data proc
 |[Cycle Detection (Directed)](./cycle_detection.py) | Detection of cycles in directed graphs |    TBD |TBD |
 |[Cycle Detection (Undirected)](./cycle_detection.py) | Detection of cycles in undirected graphs |    TBD |TBD |
 |[Topological Sort (stack)](./topological_sort.py) | Stack based ordering of DAG nodes with cycle detection |    TBD |TBD |
+|[Strongly Connected Components (Kosaraju)](./strongly_connected_components.py) | Finds maximal groups of mutually reachable vertices in directed graphs |    TBD |TBD |
 
 Note: Complexity values marked as `TBD` will be documented as part of the algorithm documentation updates.
