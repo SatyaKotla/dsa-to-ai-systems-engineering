@@ -31,5 +31,7 @@ This folder contains implementations of fundamental algorithms used in data proc
 |[Cycle Detection (Undirected)](./cycle_detection.py) | Detection of cycles in undirected graphs |    TBD |TBD |
 |[Topological Sort (stack)](./topological_sort.py) | Stack based ordering of DAG nodes with cycle detection |    TBD |TBD |
 |[Strongly Connected Components (Kosaraju)](./strongly_connected_components.py) | Finds maximal groups of mutually reachable vertices in directed graphs |    TBD |TBD |
+|[Bellman-Ford](./bellman_ford.py) | Shortest Path (negative weights) |    TBD |TBD |
+|[Bellman-Ford (optimized)](./bellman_ford.py) | Bellman-Ford with early termination |    TBD |TBD |
 
 Note: Complexity values marked as `TBD` will be documented as part of the algorithm documentation updates.
