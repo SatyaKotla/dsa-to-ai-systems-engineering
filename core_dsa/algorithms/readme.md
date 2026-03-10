@@ -26,7 +26,9 @@ This folder contains implementations of fundamental algorithms used in data proc
 |[Depth-First Search (recursive)](./dfs.py) |    Depth-first traversal   |   TBD |TBD |
 |[Depth-First Search (iterative)](./dfs.py) | Stack-based DFS |    TBD |TBD |
 |[Dijkstra](./dijkstra.py) | Shortest path (positive weights) |    TBD |TBD |
-|[Topological Sort](./topological_sort.py) | Ordering of DAG nodes |    TBD |TBD |
-
+|[Topological Sort (sorting)](./topological_sort.py) | Ordering of DAG nodes |    TBD |TBD |
+|[Cycle Detection (Directed)](./cycle_detection.py) | Detection of cycles in directed graphs |    TBD |TBD |
+|[Cycle Detection (Undirected)](./cycle_detection.py) | Detection of cycles in undirected graphs |    TBD |TBD |
+|[Topological Sort (stack)](./topological_sort.py) | Stack based ordering of DAG nodes with cycle detection |    TBD |TBD |
 
 Note: Complexity values marked as `TBD` will be documented as part of the algorithm documentation updates.
