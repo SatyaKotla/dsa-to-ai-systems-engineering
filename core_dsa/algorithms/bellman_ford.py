@@ -52,6 +52,11 @@ def reconstruct_path(previous, target):
         current = previous[current]
 
     path.reverse()
+
+    # Check if path actually starts from source
+    if len(path) == 1 and previous[target] is None:
+        return None
+
     return path
 
 
