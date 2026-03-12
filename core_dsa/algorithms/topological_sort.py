@@ -1,4 +1,5 @@
 from core_dsa.algorithms.dfs import dfs_iterative
+from collections import deque
 
 
 # simple topological sort
@@ -60,3 +61,53 @@ def topological_sort_stack(graph):
                 raise ValueError("Graph contains cycle")
 
     return stack[::-1]
+
+
+# ----------------------------
+# KAHN'S ALGORITHM
+# ----------------------------
+
+
+def topological_sort_kahn(graph):
+    """
+    Perform topological sort using Kahn's algorithm.
+
+    Args:
+        graph: Graph object (directed)
+
+    Returns:
+        list: topological ordering of vertices
+
+    Raises:
+        ValueError: if graph contains a cycle
+    """
+
+    # Step1: compute in-degrees (incoming edges
+    # at the node)
+    in_degree = {v: 0 for v in graph.vertices()}
+
+    for u in graph.vertices():
+        for v, _ in graph.neighbors(u):
+            in_degree[v] += 1
+
+    # Step2: queue of zero in-degree nodes
+    queue = deque([v for v in graph.vertices() if in_degree[v] == 0])
+
+    topo_order = []
+
+    # Step3: process nodes
+    while queue:
+        node = queue.popleft()
+        topo_order.append(node)
+
+        for neighbor, _ in graph.neighbors(node):
+            in_degree[neighbor] -= 1
+
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+
+    # Step 4: cycle detection
+    if len(topo_order) != len(graph.vertices()):
+        raise ValueError("Graph contains a cycle")
+
+    return topo_order
