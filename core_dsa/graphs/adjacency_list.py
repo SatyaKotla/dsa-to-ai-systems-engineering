@@ -16,6 +16,7 @@ class Graph:
         self.negative_edge_count = 0
 
         self.coords = {}  # optional coordinate storage
+        self.nodes = set()  # to store nodes/vertices
 
         # easy graph creation
         if edges:
@@ -26,6 +27,7 @@ class Graph:
         """Add a vertex to a graph."""
         if vertex not in self._adj:
             self._adj[vertex] = []
+            self.nodes.add(vertex)
 
         # optional coordinate for the node/vertex
         if coord is not None:
@@ -102,11 +104,23 @@ class Graph:
     def __repr__(self):
         return f"Graph(directed={self._directed})," f"vertices={len(self._adj)}"
 
+    def set_coord(self, vertex, coord):
+        """
+        Set coordinate value for a given vertex(node).
+        """
+        self.coords[vertex] = coord
+
     def get_coord(self, vertex):
         """
-        Return coordinates of a vertex.
+        Return coordinates of a vertex(node).
         """
         return self.coords.get(vertex)
+
+    def has_node(self, node):
+        """
+        Check whether a vertex(node) is in the graph.
+        """
+        return node in self.nodes
 
     # Making the graph creation easier using class methods
     @classmethod
