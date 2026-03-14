@@ -1,7 +1,5 @@
 # Spatial components
 
-import math
-
 
 def find_nearest_node(graph, x, y):
     """
@@ -34,7 +32,12 @@ def find_nearest_node(graph, x, y):
 
         nx, ny = coordinates
 
-        distance = math.sqrt((nx - x) ** 2 + (ny - y) ** 2)
+        dx = nx - x
+        dy = ny - y
+
+        distance = dx * dx + dy * dy  # squared distance instead of
+        # square root (square root operation
+        # is computationally expensive)
 
         if distance < best_distance:
             best_distance = distance
