@@ -33,5 +33,9 @@ This folder contains implementations of fundamental algorithms used in data proc
 |[Strongly Connected Components (Kosaraju)](./strongly_connected_components.py) | Finds maximal groups of mutually reachable vertices in directed graphs |    TBD |TBD |
 |[Bellman-Ford](./bellman_ford.py) | Shortest Path (negative weights) |    TBD |TBD |
 |[Bellman-Ford (optimized)](./bellman_ford.py) | Bellman-Ford with early termination |    TBD |TBD |
+|[Topological Sort (Kahn's Algorithm)](./topological_sort.py) | Topological sort using Kahn's algorithm |    TBD |TBD |
+|[ Kruskal Algorithm ](./kruskal.py) | Find minimum spanning tree in a disjointed set |    TBD |TBD |
+|[ Prim's Algorithm ](./prim.py) | Find minimum spanning tree in an adjacency list |    TBD |TBD |
+|[ A * Algorithm ](./astar.py) | Shortest Path (with heuristic) |    TBD |TBD |
 
 Note: Complexity values marked as `TBD` will be documented as part of the algorithm documentation updates.
