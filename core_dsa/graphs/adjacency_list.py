@@ -1,3 +1,6 @@
+import json
+
+
 class Graph:
     """
     Adjacency List Graph representation.
@@ -7,15 +10,26 @@ class Graph:
     - Weighted edges
     """
 
-    def __init__(self, directed: bool = True):
+    def __init__(self, edges=None, directed: bool = True):
         self._adj = {}
         self._directed = directed
         self.negative_edge_count = 0
 
-    def add_vertex(self, vertex):
+        self.coords = {}  # optional coordinate storage
+
+        # easy graph creation
+        if edges:
+            for u, v, w in edges:
+                self.add_edge(u, v, weight=w)
+
+    def add_vertex(self, vertex, coord=None):
         """Add a vertex to a graph."""
         if vertex not in self._adj:
             self._adj[vertex] = []
+
+        # optional coordinate for the node/vertex
+        if coord is not None:
+            self.coords[vertex] = coord
 
     def add_edge(self, u, v, weight: float = 1):
         """
@@ -87,6 +101,56 @@ class Graph:
 
     def __repr__(self):
         return f"Graph(directed={self._directed})," f"vertices={len(self._adj)}"
+
+    def get_coord(self, vertex):
+        """
+        Return coordinates of a vertex.
+        """
+        return self.coords.get(vertex)
+
+    # Making the graph creation easier using class methods
+    @classmethod
+    def from_edges(cls, edges, directed=True):
+        """
+        Create graph using a given edges list.
+        """
+        return cls(edges=edges, directed=directed)
+
+    @classmethod
+    def from_file(cls, filepath, directed=True):
+        """
+        Create graph using a given text file.
+        """
+        g = cls(directed=directed)
+
+        with open(filepath, "r") as f:
+            for line in f:
+                u, v, w = line.strip().split()
+                g.add_edge(u, v, float(w))
+
+        return g
+
+    @classmethod
+    def from_json(cls, filepath, directed=True):
+        """
+        Create graph using a given json file.
+        """
+
+        with open(filepath, "r") as f:
+            data = json.load(f)
+
+        g = cls(directed=directed)
+
+        # load nodes/vertices with coordinates (optional)
+        if "nodes" in data:
+            for node, coord in data["nodes"].items():
+                g.add_vertex(node, tuple(coord))
+
+        # load edges
+        for u, v, w in data["edges"]:
+            g.add_edge(u, v, weight=w)
+
+        return g
 
 
 def main():
