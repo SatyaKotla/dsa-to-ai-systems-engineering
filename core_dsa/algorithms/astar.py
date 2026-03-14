@@ -90,17 +90,23 @@ def astar(graph, source, goal, heuristic=None):
 # A helper function to reconstruct path
 def reconstruct_path(previous, source, goal):
 
-    if goal not in previous and source != goal:
+    if goal not in previous and goal != source:
         return None
 
     path = []
     current = goal
 
-    while current is not None and current != source:
+    while current is not None:
         path.append(current)
+
+        if current == source:
+            break
+
         current = previous.get(current)
 
-    path.append(source)
+        if current is None:
+            return None
+
     path.reverse()
     return path
 
