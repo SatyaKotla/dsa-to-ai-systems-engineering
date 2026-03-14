@@ -12,6 +12,7 @@ The goal is to build deep understanding of how systems behave under the hood.
 The repository is organized into multiple modules covering foundational areas of software engineering.
 
 - **Core Data Structures and Algorithms**
+- **System Design**
 - (upcoming modules)
 
 Each module contains implementations, tests, and documentation.
@@ -27,7 +28,7 @@ The core-dsa module contains implementations of fundamental data structures and 
 Examples include:
 
 - Arrays (Dynamic Array)
-- Graph (Adjaceny List)
+- Graph (Adjaceny List, Disjoint Set)
 - Additional Structures: Heap/Prioty Queue, (future work)
 
 ### Algorithms
@@ -45,8 +46,9 @@ For a full list of algorithms see:
 ## Project Structure
 
     repo-root/
-    ├── core-dsa/                       # Core data structures and algorithmic patterns
+    ├── core_dsa/                       # Core data structures and algorithmic patterns
     ├── docs/                           # Documentation
+    ├── system_design/                  # System Design Applications
     └── tests/                          # Unit tests (pytest)
 
 ---
