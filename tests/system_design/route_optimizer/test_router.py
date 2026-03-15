@@ -1,7 +1,7 @@
 ####################################################
 # --------- TESTS FOR ROUTER COMPONENT -------- ####
 ####################################################
-from system_design.route_optimizer.engine.router import compute_route
+from system_design.route_optimizer.engine.router import Router
 from core_dsa.graphs.adjacency_list import Graph
 
 # Test the basic route
@@ -25,10 +25,12 @@ def test_compute_route_basic():
 
     g = build_test_graph()
 
+    router = Router(graph=g)
+
     start = (0.1, 0)
     goal = (1.9, 0)
 
-    path, distance = compute_route(g, start, goal)
+    path, distance = router.compute_route(start, goal)
 
     assert path == ["A", "B", "C"]
     assert distance == 2
@@ -49,7 +51,9 @@ def test_compute_route_unreachable():
     start = (0, 0)
     goal = (5, 5)
 
-    path, distance = compute_route(g, start, goal)
+    router = Router(g)
+
+    path, distance = router.compute_route(start, goal)
 
     assert path is None
     assert distance == float("inf")
@@ -65,7 +69,9 @@ def test_compute_route_same_node():
     start = (0.1, 0)
     goal = (0.2, 0)
 
-    path, distance = compute_route(g, start, goal)
+    router = Router(g)
+
+    path, distance = router.compute_route(start, goal)
 
     assert path == ["A"]
     assert distance == 0
