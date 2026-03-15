@@ -13,3 +13,5 @@ htmlcov/
 
 # ignore generated datasets
 tests/data/grid_*.json
+!tests/data/grid_10.json
+!tests/data/grid_50.json
