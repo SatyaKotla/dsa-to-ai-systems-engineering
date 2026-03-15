@@ -55,7 +55,7 @@ def test_compute_route_unreachable():
 
     result = router.compute_route(start, goal)
 
-    assert result.nodes is None
+    assert result.nodes == []
     assert result.distance == float("inf")
 
 
