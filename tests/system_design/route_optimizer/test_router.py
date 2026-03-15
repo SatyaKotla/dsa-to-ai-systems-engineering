@@ -30,10 +30,10 @@ def test_compute_route_basic():
     start = (0.1, 0)
     goal = (1.9, 0)
 
-    path, distance = router.compute_route(start, goal)
+    result = router.compute_route(start, goal)
 
-    assert path == ["A", "B", "C"]
-    assert distance == 2
+    assert result.nodes == ["A", "B", "C"]
+    assert result.distance == 2
 
 
 # Test: Unreachable Node
@@ -53,10 +53,10 @@ def test_compute_route_unreachable():
 
     router = Router(g)
 
-    path, distance = router.compute_route(start, goal)
+    result = router.compute_route(start, goal)
 
-    assert path is None
-    assert distance == float("inf")
+    assert result.nodes is None
+    assert result.distance == float("inf")
 
 
 # Test for Same Start and Goal
@@ -71,7 +71,7 @@ def test_compute_route_same_node():
 
     router = Router(g)
 
-    path, distance = router.compute_route(start, goal)
+    result = router.compute_route(start, goal)
 
-    assert path == ["A"]
-    assert distance == 0
+    assert result.nodes == ["A"]
+    assert result.distance == 0

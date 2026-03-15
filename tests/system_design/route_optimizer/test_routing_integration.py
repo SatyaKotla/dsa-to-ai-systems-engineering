@@ -19,7 +19,7 @@ def test_route_from_json():
     start = (0, 0)
     goal = (4, 4)
 
-    path, distance = router.compute_route(start, goal)
+    result = router.compute_route(start, goal)
 
-    assert path is not None
-    assert distance >= 0
+    assert result.nodes is not None
+    assert result.distance >= 0

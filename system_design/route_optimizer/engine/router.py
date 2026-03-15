@@ -1,5 +1,6 @@
 from .spatial import find_nearest_node, KDTree
 from core_dsa.algorithms.astar import astar, reconstruct_path
+from .route_result import RouteResult
 
 
 # --------------- Router Class --------------
@@ -24,19 +25,22 @@ class Router:
 
         # Step 3: check reachability
         if distances.get(goal_node, float("inf")) == float("inf"):
-            return None, float("inf")
+            return RouteResult([], [], float("inf"))
 
         # Step 4: reconstruct path
         path = reconstruct_path(previous, start_node, goal_node)
 
         # Step 5: unreachable route check with path
         if path is None:
-            return None, float("inf")
+            return RouteResult([], [], float("inf"))
 
         # Step 6: get total distance
         distance = distances[goal_node]
 
-        return path, distance
+        # Step 7 Get coordinates of the path nodes
+        coordinates = [self.graph.get_coord(node) for node in path]
+
+        return RouteResult(path, coordinates, distance)
 
     def _nearest_node(self, coordinates):
         # unpack coordinates

@@ -12,7 +12,8 @@ router = Router(graph)
 start = (0, 0)
 goal = (10, 10)
 
-path, distance = router.compute_route(start, goal)
+result = router.compute_route(start, goal)
 
-print(f"Router: {path}")
-print(f"Distance: {distance}")
+print(f"Path nodes: {result.nodes}")
+print(f"Distance: {result.distance}")
+print(f"Coordinates: {result.coordinates}")
