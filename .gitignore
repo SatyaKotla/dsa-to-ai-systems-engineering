@@ -1,8 +1,8 @@
-# Python 
+# Python
 __pycache__/
-*.pyc 
-*.pyo 
-*.pyd 
+*.pyc
+*.pyo
+*.pyd
 .vscode/
 .env
 # Pytest
@@ -10,3 +10,6 @@ __pycache__/
 # Coverage
 .coverage
 htmlcov/
+
+# ignore generated datasets
+tests/data/grid_*.json
