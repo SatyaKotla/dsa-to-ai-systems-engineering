@@ -6,11 +6,11 @@ from ..engine.cost_models.distance_cost import DistanceCost
 
 class MapLoader:
 
-    def __init__(self, cost_model=None):
-        self.cost_model = cost_model or DistanceCost()
-
     @staticmethod
-    def from_json(self, file_path):
+    def from_json(file_path, cost_model=None):
+
+        if cost_model is None:
+            cost_model = DistanceCost()
 
         with open(file_path, "r") as f:
             data = json.load(f)
@@ -39,7 +39,7 @@ class MapLoader:
 
                 metadata = EdgeMetadata(distance=distance, speed=speed)
 
-                weight = self.cost_model.compute(metadata)
+                weight = cost_model.compute(metadata)
 
                 graph.add_edge(u, v, weight)
 
