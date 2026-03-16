@@ -1,5 +1,5 @@
-from engine.cost_models.base_cost import BaseCost
-from engine.edge_metadata import EdgeMetadata
+from .base_cost import BaseCost
+from ..edge_metadata import EdgeMetadata
 
 
 class DistanceCost(BaseCost):

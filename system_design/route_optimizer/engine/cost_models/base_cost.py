@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from engine.edge_metadata import EdgeMetadata
+from ..edge_metadata import EdgeMetadata
 
 
 class BaseCost(ABC):
