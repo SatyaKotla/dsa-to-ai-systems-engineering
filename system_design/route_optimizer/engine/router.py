@@ -1,14 +1,16 @@
 from core_dsa.algorithms.astar import astar, reconstruct_path
 from .route_result import RouteResult
 from .route_segment import RouteSegment
+import math
 
 
 # --------------- Router Class --------------
 class Router:
 
-    def __init__(self, graph, spatial_index):
+    def __init__(self, graph, spatial_index, edge_metadata=None):
         self.graph = graph
         self.spatial_index = spatial_index
+        self.edge_metadata = edge_metadata or {}
 
     def compute_route(self, start_coordinates, goal_coordinates):
 
@@ -63,15 +65,28 @@ class Router:
             start_coordinates = self.graph.coords[start]
             end_coordinates = self.graph.coords[end]
 
-            dx = end_coordinates[0] - start_coordinates[0]
-            dy = end_coordinates[1] - start_coordinates[1]
+            distance = self._distance(start_coordinates, end_coordinates)
 
-            distance = (dx * dx + dy * dy) ** 0.5
+            metadata = None
+            if hasattr(self, "edge_metadata"):
+                metadata = self.edge_metadata.get((start, end))
 
             segment = RouteSegment(
-                start, end, distance, [start_coordinates, end_coordinates]
+                start,
+                end,
+                distance,
+                start_coordinates,
+                end_coordinates,
+                metadata=metadata,
             )
 
             segments.append(segment)
 
         return segments
+
+    def _distance(self, a, b):
+
+        x1, y1 = a
+        x2, y2 = b
+
+        return math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
