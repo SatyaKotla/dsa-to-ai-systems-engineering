@@ -3,6 +3,9 @@
 ####################################################
 from system_design.route_optimizer.engine.router import Router
 from core_dsa.graphs.adjacency_list import Graph
+from system_design.route_optimizer.engine.spatial_index_factory import (
+    create_spatial_index,
+)
 
 # Test the basic route
 
@@ -25,7 +28,9 @@ def test_compute_route_basic():
 
     g = build_test_graph()
 
-    router = Router(graph=g)
+    index = create_spatial_index(graph=g, method="kdtree")
+
+    router = Router(graph=g, spatial_index=index)
 
     start = (0.1, 0)
     goal = (1.9, 0)
@@ -51,7 +56,9 @@ def test_compute_route_unreachable():
     start = (0, 0)
     goal = (5, 5)
 
-    router = Router(g)
+    index = create_spatial_index(graph=g, method="kdtree")
+
+    router = Router(graph=g, spatial_index=index)
 
     result = router.compute_route(start, goal)
 
@@ -69,7 +76,9 @@ def test_compute_route_same_node():
     start = (0.1, 0)
     goal = (0.2, 0)
 
-    router = Router(g)
+    index = create_spatial_index(graph=g, method="kdtree")
+
+    router = Router(graph=g, spatial_index=index)
 
     result = router.compute_route(start, goal)
 

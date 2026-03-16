@@ -1,4 +1,3 @@
-from .spatial import find_nearest_node, KDTree
 from core_dsa.algorithms.astar import astar, reconstruct_path
 from .route_result import RouteResult
 
@@ -6,9 +5,9 @@ from .route_result import RouteResult
 # --------------- Router Class --------------
 class Router:
 
-    def __init__(self, graph):
+    def __init__(self, graph, spatial_index):
         self.graph = graph
-        self.kdtree = KDTree(graph)
+        self.spatial_index = spatial_index
 
     def compute_route(self, start_coordinates, goal_coordinates):
 
@@ -46,4 +45,4 @@ class Router:
         # unpack coordinates
         x, y = coordinates
 
-        return find_nearest_node(graph=self.graph, x=x, y=y, kdtree=self.kdtree)
+        return self.spatial_index.nearest(x, y)
