@@ -5,9 +5,9 @@ from ..engine.spatial_index_factory import create_spatial_index
 
 class RoutingService:
 
-    def __init__(self, map_path, spatial_method="kdtree"):
+    def __init__(self, map_path, spatial_method="kdtree", cost_model=None):
 
-        self.graph = MapLoader.from_json(map_path)
+        self.graph = MapLoader.from_json(file_path=map_path, cost_model=cost_model)
 
         self.index = create_spatial_index(graph=self.graph, method=spatial_method)
 
