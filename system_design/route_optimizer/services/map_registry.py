@@ -1,6 +1,6 @@
-from .route_service import RoutingService
-from ..engine.cost_models.distance_cost import DistanceCost
-from ..engine.cost_models.time_cost import TimeCost
+from system_design.route_optimizer.services.route_service import RoutingService
+from system_design.route_optimizer.engine.cost_models.distance_cost import DistanceCost
+from system_design.route_optimizer.engine.cost_models.time_cost import TimeCost
 
 
 class MapRegistry:

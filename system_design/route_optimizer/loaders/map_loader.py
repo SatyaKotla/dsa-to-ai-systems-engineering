@@ -1,7 +1,7 @@
 import json
 from core_dsa.graphs.adjacency_list import Graph
-from ..engine.edge_metadata import EdgeMetadata
-from ..engine.cost_models.distance_cost import DistanceCost
+from system_design.route_optimizer.engine.edge_metadata import EdgeMetadata
+from system_design.route_optimizer.engine.cost_models.distance_cost import DistanceCost
 
 
 class MapLoader:

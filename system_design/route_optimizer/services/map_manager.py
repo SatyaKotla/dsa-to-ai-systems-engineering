@@ -1,4 +1,4 @@
-from .map_registry import MapRegistry
+from system_design.route_optimizer.services.map_registry import MapRegistry
 
 
 class MapManager:

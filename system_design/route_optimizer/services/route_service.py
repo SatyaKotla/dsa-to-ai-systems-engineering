@@ -1,6 +1,8 @@
-from ..loaders.map_loader import MapLoader
-from ..engine.router import Router
-from ..engine.spatial_index_factory import create_spatial_index
+from system_design.route_optimizer.loaders.map_loader import MapLoader
+from system_design.route_optimizer.engine.router import Router
+from system_design.route_optimizer.engine.spatial_index_factory import (
+    create_spatial_index,
+)
 
 
 class RoutingService:

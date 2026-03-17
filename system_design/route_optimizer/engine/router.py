@@ -1,6 +1,6 @@
 from core_dsa.algorithms.astar import astar, reconstruct_path
-from .route_result import RouteResult
-from .route_segment import RouteSegment
+from system_design.route_optimizer.engine.route_result import RouteResult
+from system_design.route_optimizer.engine.route_segment import RouteSegment
 import math
 
 

@@ -1,5 +1,5 @@
-from .kdtree_index import KDTreeIndex
-from .brute_force_index import BruteForceIndex
+from system_design.route_optimizer.engine.kdtree_index import KDTreeIndex
+from system_design.route_optimizer.engine.brute_force_index import BruteForceIndex
 
 
 def create_spatial_index(graph, method="kdtree"):

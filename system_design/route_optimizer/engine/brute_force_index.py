@@ -1,4 +1,4 @@
-from .spatial_index import SpatialIndex
+from system_design.route_optimizer.engine.spatial_index import SpatialIndex
 
 
 class BruteForceIndex(SpatialIndex):

@@ -1,5 +1,5 @@
-from .spatial_index import SpatialIndex
-from .spatial import KDTree
+from system_design.route_optimizer.engine.spatial_index import SpatialIndex
+from system_design.route_optimizer.engine.spatial import KDTree
 
 
 class KDTreeIndex(SpatialIndex):
