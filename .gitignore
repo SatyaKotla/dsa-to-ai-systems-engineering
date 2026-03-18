@@ -5,6 +5,12 @@ __pycache__/
 *.pyd
 .vscode/
 .env
+
+# Packaging
+*.egg-info/
+dist/
+build/
+
 # Pytest
 .pytest_cache/
 # Coverage
