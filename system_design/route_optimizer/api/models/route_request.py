@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class RouteRequest(BaseModel):
@@ -9,3 +10,4 @@ class RouteRequest(BaseModel):
     end_lat: float
     end_lon: float
     cost: str = "distance"
+    include_coordinates: Optional[bool] = False  # default False

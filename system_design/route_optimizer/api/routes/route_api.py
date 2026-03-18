@@ -7,7 +7,7 @@ from system_design.route_optimizer.services.map_manager import map_manager
 router = APIRouter()
 
 
-@router.post("/route", response_model=RouteResponse)
+@router.post("/route", response_model=RouteResponse, response_model_exclude_none=True)
 def compute_route(request: RouteRequest):
 
     try:
@@ -24,18 +24,26 @@ def compute_route(request: RouteRequest):
         result = service.route(start, end)
 
         # Step 3: Handle no route
-        if result is None or result.nodes is None:
-            raise HTTPException(status_code=404, detail="Route not found")
+        if result is None or not result.nodes or result.distance is None:
+            raise HTTPException(
+                status_code=404,
+                detail="No valid route found for given start and end goal",
+            )
 
         # Step 4: Return Response
-        return RouteResponse(
-            distance=result.distance, path=result.nodes, coordinates=result.coordinates
-        )
+        response = {"distance": result.distance, "path": result.nodes}
+        if request.include_coordinates:
+            response["coordinates"] = result.coordinates
+
+        return response
 
     except ValueError as e:
         # Map validation / missing map
         raise HTTPException(status_code=400, detail=str(e))
 
-    except Exception:
+    except HTTPException as e:
+        raise e  # re-raise as-is
+
+    except Exception as e:
         # Unexpected errors
-        raise HTTPException(status_code=500, detail="Internal server error")
+        raise HTTPException(status_code=500, detail=str(e))
