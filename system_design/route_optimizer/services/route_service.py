@@ -1,17 +1,13 @@
-from system_design.route_optimizer.loaders.map_loader import MapLoader
 from system_design.route_optimizer.engine.router import Router
-from system_design.route_optimizer.engine.spatial_index_factory import (
-    create_spatial_index,
-)
 
 
 class RoutingService:
 
-    def __init__(self, map_path, spatial_method="kdtree", cost_model=None):
+    def __init__(self, graph, spatial_index):
 
-        self.graph = MapLoader.from_json(file_path=map_path, cost_model=cost_model)
+        self.graph = graph
 
-        self.index = create_spatial_index(graph=self.graph, method=spatial_method)
+        self.index = spatial_index
 
         self.router = Router(graph=self.graph, spatial_index=self.index)
 

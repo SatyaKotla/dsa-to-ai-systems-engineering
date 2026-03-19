@@ -1,6 +1,10 @@
 from system_design.route_optimizer.services.route_service import RoutingService
 from system_design.route_optimizer.engine.cost_models.distance_cost import DistanceCost
 from system_design.route_optimizer.engine.cost_models.time_cost import TimeCost
+from system_design.route_optimizer.loaders.json_loader import JSONMapLoader
+from system_design.route_optimizer.engine.spatial_index_factory import (
+    create_spatial_index,
+)
 
 
 class MapRegistry:
@@ -40,9 +44,15 @@ class MapRegistry:
 
         cost_model = self.cost_models[cost_type]()
 
-        service = RoutingService(
-            map_path=map_path, spatial_method=spatial_method, cost_model=cost_model
-        )
+        # New: Load graph
+        loader = JSONMapLoader(cost_model=cost_model)
+        graph = loader.load(map_path)
+
+        # New: Build spatial index here
+        spatial_index = create_spatial_index(graph=graph, method=spatial_method)
+
+        # New: Pass ready objects
+        service = RoutingService(graph=graph, spatial_index=spatial_index)
 
         self._services[key] = service
 
