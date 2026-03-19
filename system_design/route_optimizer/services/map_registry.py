@@ -1,7 +1,6 @@
 from system_design.route_optimizer.services.route_service import RoutingService
 from system_design.route_optimizer.engine.cost_models.distance_cost import DistanceCost
 from system_design.route_optimizer.engine.cost_models.time_cost import TimeCost
-from system_design.route_optimizer.loaders.json_loader import JSONMapLoader
 from system_design.route_optimizer.engine.spatial_index_factory import (
     create_spatial_index,
 )
@@ -19,11 +18,20 @@ class MapRegistry:
         # Available cost models
         self.cost_models = {"distance": DistanceCost, "time": TimeCost}
 
-    def register_map(self, name, map_path, spatial_method="kdtree"):
+        # Loader registry
+        self._loaders = {}
+
+    def register_loader(self, name, loader):
+        """
+        Register a map loader(e.g., 'json', 'osm')
+        """
+        self._loaders[name] = loader
+
+    def register_map(self, name, map_path, spatial_method="kdtree", loader_type="json"):
         """
         Register a map configuration.
         """
-        self._map_configs[name] = (map_path, spatial_method)
+        self._map_configs[name] = (map_path, spatial_method, loader_type)
 
     def load_map(self, name, cost_type="distance"):
         """
@@ -37,7 +45,7 @@ class MapRegistry:
         if key in self._services:
             return self._services[key]
 
-        map_path, spatial_method = self._map_configs[name]
+        map_path, spatial_method, loader_type = self._map_configs[name]
 
         if cost_type not in self.cost_models:
             raise ValueError(f"Unknown cost type '{cost_type}'")
@@ -45,7 +53,13 @@ class MapRegistry:
         cost_model = self.cost_models[cost_type]()
 
         # New: Load graph
-        loader = JSONMapLoader(cost_model=cost_model)
+        if loader_type not in self._loaders:
+            raise ValueError(f"Loader '{loader_type}' not registered")
+
+        base_loader = self._loaders[loader_type]
+
+        # Inject cost model into loader
+        loader = base_loader(cost_model=cost_model)
         graph = loader.load(map_path)
 
         # New: Build spatial index here

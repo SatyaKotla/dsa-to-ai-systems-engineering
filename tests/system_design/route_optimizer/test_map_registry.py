@@ -2,6 +2,7 @@
 # --------- TESTS FOR MAP REGISTRY --------------- #
 ####################################################
 from system_design.route_optimizer.services.map_registry import MapRegistry
+from system_design.route_optimizer.loaders.json_loader import JSONMapLoader
 import pytest
 
 
@@ -9,6 +10,7 @@ import pytest
 def test_register_map():
 
     registry = MapRegistry()
+    registry.register_loader("json", JSONMapLoader)
 
     registry.register_map("grid_10", "tests/data/grid_10.json", "kdtree")
 
@@ -19,6 +21,7 @@ def test_register_map():
 def test_lazy_loading():
 
     registry = MapRegistry()
+    registry.register_loader("json", JSONMapLoader)
 
     registry.register_map("grid_10", "tests/data/grid_10.json", "kdtree")
 
@@ -35,6 +38,7 @@ def test_lazy_loading():
 def test_service_cache():
 
     registry = MapRegistry()
+    registry.register_loader("json", JSONMapLoader)
 
     registry.register_map("grid_10", "tests/data/grid_10.json", "kdtree")
 
@@ -48,6 +52,7 @@ def test_service_cache():
 def test_multiple_cost_models():
 
     registry = MapRegistry()
+    registry.register_loader("json", JSONMapLoader)
 
     registry.register_map("grid_10", "tests/data/grid_10.json", "kdtree")
 
@@ -70,6 +75,7 @@ def test_unknown_map():
 def test_unknown_cost():
 
     registry = MapRegistry()
+    registry.register_loader("json", JSONMapLoader)
 
     registry.register_map("grid_10", "tests/data/grid_10.json", "kdtree")
 
