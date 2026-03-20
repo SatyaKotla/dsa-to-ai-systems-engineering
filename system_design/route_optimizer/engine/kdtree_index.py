@@ -9,3 +9,6 @@ class KDTreeIndex(SpatialIndex):
 
     def nearest(self, x, y):
         return self.kdtree.nearest((x, y))
+
+    def nearest_node_distance(self, x, y):
+        return self.kdtree.nearest_node_distance((x, y))

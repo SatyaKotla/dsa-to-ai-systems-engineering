@@ -139,3 +139,46 @@ class KDTree:
         search(self.root, 0)
 
         return best_node
+
+    def nearest_node_distance(self, target):
+
+        best_node = None
+        best_dist = float("inf")
+
+        def search(node, depth):
+
+            nonlocal best_node, best_dist
+
+            if node is None:
+                return
+
+            node_point = (node.x, node.y)
+
+            d = distance(node_point, target)
+
+            if d < best_dist:
+                best_dist = d
+                best_node = node.node_id
+
+            axis = depth % 2
+
+            if axis == 0:
+                difference = target[0] - node.x
+            else:
+                difference = target[1] - node.y
+
+            if difference < 0:
+                first = node.left
+                second = node.right
+            else:
+                first = node.right
+                second = node.left
+
+            search(first, depth + 1)
+
+            if abs(difference) < best_dist:
+                search(second, depth + 1)
+
+        search(self.root, 0)
+
+        return best_node, best_dist

@@ -25,3 +25,23 @@ class BruteForceIndex(SpatialIndex):
                 best_node = node
 
         return best_node
+
+    def nearest_node_distance(self, x, y):
+
+        best_node = None
+        best_distance_squared = float("inf")
+
+        for node, coordinates in self.graph.coords.items():
+
+            dx = coordinates[0] - x
+            dy = coordinates[1] - y
+
+            distance = dx * dx + dy * dy  # squared distance insted
+            # this avoid computational
+            # overhead of square root
+
+            if distance < best_distance_squared:
+                best_distance_squared = distance
+                best_node = node
+
+        return best_node, best_distance_squared
