@@ -40,6 +40,6 @@ class RoutingService:
 
         if distance > self.snap_threshold:
             raise ValueError(
-                f"Coordinates {coordinates} too"
+                f"Coordinates {coordinates} too "
                 f"far from map (distance={distance:.4f})"
             )

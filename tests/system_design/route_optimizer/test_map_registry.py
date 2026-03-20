@@ -96,3 +96,49 @@ def test_custom_threshold():
     service = registry.get_service("grid_10")
 
     assert service.snap_threshold == 0.5
+
+
+# Test: Snap value changes check
+def test_snap_threshold_strict():
+
+    registry = MapRegistry()
+    registry.register_loader("json", JSONMapLoader)
+
+    registry.register_map(
+        "grid_10", "tests/data/grid_10.json", "kdtree", snap_threshold=0.1
+    )
+
+    service = registry.get_service("grid_10")
+
+    with pytest.raises(ValueError):
+        service.route((100, 100), (200, 200))
+
+
+def test_snap_threshold_relaxed():
+
+    registry = MapRegistry()
+    registry.register_loader("json", JSONMapLoader)
+
+    registry.register_map(
+        "grid_10", "tests/data/grid_10.json", "kdtree", snap_threshold=400
+    )
+
+    service = registry.get_service("grid_10")
+
+    result = service.route((100, 100), (200, 200))
+
+    assert result is not None
+
+
+# Test: Threshold assignment
+def test_snap_threshold_assignment():
+
+    registry = MapRegistry()
+    registry.register_loader("json", JSONMapLoader)
+    registry.register_map(
+        "grid_10", "tests/data/grid_10.json", "kdtree", snap_threshold=123
+    )
+
+    service = registry.get_service("grid_10")
+
+    assert service.snap_threshold == 123

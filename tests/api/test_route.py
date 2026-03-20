@@ -109,3 +109,23 @@ def test_route_invalid_map():
     )
 
     assert response.status_code == 400
+
+
+# Test: Route out of bounds
+def test_route_out_of_bounds_coordinates():
+    response = client.post(
+        "/route",
+        json={
+            "map": "grid_10",
+            "start_lat": "100",
+            "start_lon": "100",
+            "end_lat": "200",
+            "end_lon": "200",
+            "include_coordinates": False,
+        },
+    )
+
+    assert response.status_code == 400
+
+    data = response.json()
+    assert "too far" in data["detail"]
