@@ -10,7 +10,8 @@ requires-python = ">=3.9"
 
 dependencies = [
     "fastapi",
-    "uvicorn"
+    "uvicorn",
+    "osmnx"
 ]
 
 [project.optional-dependencies]
