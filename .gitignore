@@ -21,3 +21,14 @@ htmlcov/
 tests/data/grid_*.json
 !tests/data/grid_10.json
 !tests/data/grid_50.json
+
+# ignore graph cache data
+system_design/route_optimizer/data/osm_cache/*
+!system_design/route_optimizer/data/osm_cache/.gitkeep
+
+# ignore cache
+cache/
+
+# ignore osm_http cache
+system_design/route_optimizer/data/osm_http_cache/*
+!system_design/route_optimizer/data/osm_http_cache/.gitkeep
