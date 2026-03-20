@@ -81,3 +81,18 @@ def test_unknown_cost():
 
     with pytest.raises(ValueError):
         registry.get_service("grid_10", "invalid_cost")
+
+
+# Test: Custom threshold
+def test_custom_threshold():
+
+    registry = MapRegistry()
+    registry.register_loader("json", JSONMapLoader)
+
+    registry.register_map(
+        "grid_10", "tests/data/grid_10.json", "kdtree", snap_threshold=0.5
+    )
+
+    service = registry.get_service("grid_10")
+
+    assert service.snap_threshold == 0.5

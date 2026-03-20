@@ -27,11 +27,23 @@ class MapRegistry:
         """
         self._loaders[name] = loader
 
-    def register_map(self, name, map_path, spatial_method="kdtree", loader_type="json"):
+    def register_map(
+        self,
+        name,
+        map_path,
+        spatial_method="kdtree",
+        loader_type="json",
+        snap_threshold=0.01,
+    ):
         """
         Register a map configuration.
         """
-        self._map_configs[name] = (map_path, spatial_method, loader_type)
+        self._map_configs[name] = (
+            map_path,
+            spatial_method,
+            loader_type,
+            snap_threshold,
+        )
 
     def load_map(self, name, cost_type="distance"):
         """
@@ -45,7 +57,7 @@ class MapRegistry:
         if key in self._services:
             return self._services[key]
 
-        map_path, spatial_method, loader_type = self._map_configs[name]
+        map_path, spatial_method, loader_type, snap_threshold = self._map_configs[name]
 
         if cost_type not in self.cost_models:
             raise ValueError(f"Unknown cost type '{cost_type}'")
@@ -66,7 +78,9 @@ class MapRegistry:
         spatial_index = create_spatial_index(graph=graph, method=spatial_method)
 
         # New: Pass ready objects
-        service = RoutingService(graph=graph, spatial_index=spatial_index)
+        service = RoutingService(
+            graph=graph, spatial_index=spatial_index, snap_threshold=snap_threshold
+        )
 
         self._services[key] = service
 

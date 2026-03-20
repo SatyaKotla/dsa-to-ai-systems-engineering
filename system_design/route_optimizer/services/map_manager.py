@@ -16,11 +16,19 @@ class MapManager:
     def _register_maps(self):
 
         self.registry.register_map(
-            "grid_10", "tests/data/grid_10.json", "kdtree", loader_type="json"
+            "grid_10",
+            "tests/data/grid_10.json",
+            "kdtree",
+            loader_type="json",
+            snap_threshold=0.2,
         )
 
         self.registry.register_map(
-            "grid_50", "tests/data/grid_50.json", "kdtree", loader_type="json"
+            "grid_50",
+            "tests/data/grid_50.json",
+            "kdtree",
+            loader_type="json",
+            snap_threshold=0.2,
         )
 
     def get_service(self, map_name, cost="distance"):
