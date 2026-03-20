@@ -1,5 +1,6 @@
 from system_design.route_optimizer.services.map_registry import MapRegistry
 from system_design.route_optimizer.loaders.json_loader import JSONMapLoader
+from system_design.route_optimizer.loaders.osm_loader import OSMLoader
 import json
 from pathlib import Path
 
@@ -12,6 +13,7 @@ class MapManager:
 
         # Register loaders
         self.registry.register_loader("json", JSONMapLoader)
+        self.registry.register_loader("osm", OSMLoader)
 
         self._register_maps()
 
