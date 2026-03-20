@@ -1,5 +1,7 @@
 from system_design.route_optimizer.services.map_registry import MapRegistry
 from system_design.route_optimizer.loaders.json_loader import JSONMapLoader
+import json
+from pathlib import Path
 
 
 class MapManager:
@@ -15,21 +17,20 @@ class MapManager:
 
     def _register_maps(self):
 
-        self.registry.register_map(
-            "grid_10",
-            "tests/data/grid_10.json",
-            "kdtree",
-            loader_type="json",
-            snap_threshold=0.2,
-        )
+        config_path = Path(__file__).parent.parent / "config" / "maps.json"
 
-        self.registry.register_map(
-            "grid_50",
-            "tests/data/grid_50.json",
-            "kdtree",
-            loader_type="json",
-            snap_threshold=0.2,
-        )
+        with open(config_path, "r") as f:
+            config = json.load(f)
+
+        for map_name, map_config in config["maps"].items():
+
+            self.registry.register_map(
+                name=map_name,
+                map_path=map_config["source"],
+                spatial_method=map_config.get("spatial", "kdtree"),
+                loader_type=map_config.get("loader", "json"),
+                snap_threshold=map_config.get("snap_threshold", 0.01),
+            )
 
     def get_service(self, map_name, cost="distance"):
         return self.registry.get_service(map_name, cost)
