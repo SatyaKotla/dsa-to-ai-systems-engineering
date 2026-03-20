@@ -4,6 +4,7 @@ from system_design.route_optimizer.loaders.base_loader import BaseMapLoader
 from core_dsa.graphs.adjacency_list import Graph
 from system_design.route_optimizer.engine.edge_metadata import EdgeMetadata
 from system_design.route_optimizer.engine.cost_models.distance_cost import DistanceCost
+from pathlib import Path
 
 
 class OSMLoader(BaseMapLoader):
@@ -13,8 +14,37 @@ class OSMLoader(BaseMapLoader):
 
     def load(self, source):
 
-        # Step 1: Download graph from OSM
-        G = ox.graph_from_place(source, network_type="drive")
+        # Step 1: Load graph from OSM
+
+        # -----------------------------
+        # Configure OSMnx HTTP cache
+        # -----------------------------
+        http_cache_dir = Path(__file__).parent.parent / "data" / "osm_http_cache"
+        http_cache_dir.mkdir(parents=True, exist_ok=True)
+
+        ox.settings.cache_folder = str(http_cache_dir)
+        ox.settings.use_cache = True
+
+        # -----------------------------
+        # Setup Graph Cache
+        # -----------------------------
+        graph_cache_dir = Path(__file__).parent.parent / "data" / "osm_cache"
+        graph_cache_dir.mkdir(parents=True, exist_ok=True)
+
+        # create file name
+        file_name = source.replace(" ", "_").replace(",", "") + ".graphml"
+        graph_cache_path = graph_cache_dir / file_name
+
+        # -----------------------------
+        # Load or Download Graph
+        # -----------------------------
+        if graph_cache_path.exists():
+            print("Loading graph from cache...")
+            G = ox.load_graphml(graph_cache_path)
+        else:
+            print("Downloading graph from OSM")
+            G = ox.graph_from_place(source, network_type="drive")
+            ox.save_graphml(G, graph_cache_path)
 
         graph = Graph(directed=True)
 
