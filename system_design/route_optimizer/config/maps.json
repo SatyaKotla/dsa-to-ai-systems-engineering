@@ -12,6 +12,13 @@
             "loader": "json",
             "spatial": "kdtree",
             "snap_threshold": 0.2
+        },
+
+        "osm_nyc":{
+            "source": "Manhattan, New York, USA",
+            "loader": "osm",
+            "spatial": "kdtree",
+            "snap_threshold": 0.001
         }
     }
 }
