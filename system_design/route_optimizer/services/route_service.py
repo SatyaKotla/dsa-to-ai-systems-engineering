@@ -1,4 +1,7 @@
 from system_design.route_optimizer.engine.router import Router
+from system_design.route_optimizer.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class RoutingService:
@@ -17,6 +20,10 @@ class RoutingService:
 
     def route(self, start_coordinates, goal_coordinates):
 
+        logger.info(
+            f"Routing request: start={start_coordinates}, " f"goal={goal_coordinates}"
+        )
+
         # Validation of nodes
         self._validate_coordinates(start_coordinates)
         self._validate_coordinates(goal_coordinates)
@@ -32,13 +39,23 @@ class RoutingService:
 
         self._route_cache[key] = result
 
+        logger.info("Route computed successfully")
+
         return result
 
     def _validate_coordinates(self, coordinates):
         x, y = coordinates
-        _, distance = self.index.nearest_node_distance(x, y)
+        node, distance = self.index.nearest_node_distance(x, y)
+
+        logger.debug(
+            f"Snapping: coords={coordinates}, " f"node={node}, distance={distance}"
+        )
 
         if distance > self.snap_threshold:
+
+            logger.warning(
+                f"Coordinates too far: {coordinates}, " f"distance:{distance}"
+            )
             raise ValueError(
                 f"Coordinates {coordinates} too "
                 f"far from map (distance={distance:.4f})"

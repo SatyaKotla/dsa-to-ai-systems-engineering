@@ -4,6 +4,9 @@ from system_design.route_optimizer.engine.cost_models.time_cost import TimeCost
 from system_design.route_optimizer.engine.spatial_index_factory import (
     create_spatial_index,
 )
+from system_design.route_optimizer.utils.logger import get_logger
+
+logger = get_logger(__name__)
 
 
 class MapRegistry:
@@ -49,6 +52,8 @@ class MapRegistry:
         """
         Build and cache a routing service.
         """
+        logger.info(f"Loading map: {name} with cost={cost_type}")
+
         if name not in self._map_configs:
             raise ValueError(f"Map '{name}' is not registered")
 
@@ -81,6 +86,8 @@ class MapRegistry:
         service = RoutingService(
             graph=graph, spatial_index=spatial_index, snap_threshold=snap_threshold
         )
+
+        logger.info(f"Map loaded and service created: {name}")
 
         self._services[key] = service
 

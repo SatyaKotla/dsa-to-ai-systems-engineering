@@ -3,12 +3,17 @@ from fastapi import APIRouter, HTTPException
 from system_design.route_optimizer.api.models.route_request import RouteRequest
 from system_design.route_optimizer.api.models.route_response import RouteResponse
 from system_design.route_optimizer.services.map_manager import map_manager
+from system_design.route_optimizer.utils.logger import get_logger
+
+loggger = get_logger(__name__)
 
 router = APIRouter()
 
 
 @router.post("/route", response_model=RouteResponse, response_model_exclude_none=True)
 def compute_route(request: RouteRequest):
+
+    loggger.info(f"API request received for map={request.map}")
 
     try:
         # Step 1: Convert input to internal format
@@ -35,15 +40,20 @@ def compute_route(request: RouteRequest):
         if request.include_coordinates:
             response["coordinates"] = result.coordinates
 
+        loggger.info("API route computed successfully")
+
         return response
 
     except ValueError as e:
         # Map validation / missing map
+        loggger.error(f"Map validation error: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
     except HTTPException as e:
+        loggger.error(f"{str(e)}")
         raise e  # re-raise as-is
 
     except Exception as e:
         # Unexpected errors
+        loggger.error(f"{str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
