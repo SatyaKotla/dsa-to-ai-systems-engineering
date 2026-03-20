@@ -36,7 +36,11 @@ def compute_route(request: RouteRequest):
             )
 
         # Step 4: Return Response
-        response = {"distance": result.distance, "path": result.nodes}
+
+        response = {
+            "distance": result.distance,
+            "path": [str(node) for node in result.nodes],  # format nodes to response
+        }
         if request.include_coordinates:
             response["coordinates"] = result.coordinates
 
