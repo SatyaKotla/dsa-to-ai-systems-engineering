@@ -14,11 +14,19 @@
             "snap_threshold": 0.2
         },
 
-        "osm_nyc":{
+        "osm_manhattan":{
             "source": "Manhattan, New York, USA",
             "loader": "osm",
             "spatial": "kdtree",
             "snap_threshold": 0.001
+        },
+
+        "osm_nyc":{
+            "source": "New York City, New York, USA",
+            "loader": "osm",
+            "spatial": "kdtree",
+            "snap_threshold": 0.001
         }
+
     }
 }
