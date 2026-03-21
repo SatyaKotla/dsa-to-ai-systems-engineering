@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>
+        Route Optimizer
+        </title>
+        <!-- Leafet CSS-->
+         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+            integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+            crossorigin=""/>
+
+        <!-- Leaflet JS -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin="">
+        </script>
+
+        <style>
+            #map{
+                height: 90vh;
+            }
+        </style>
+
+    </head>
+    <body>
+        <h2>Route Optimizer</h2>
+        <div id="map"></div>
+
+        <script>
+
+            var map = L.map("map").setView([40.7580, -73.9855], 13);
+
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+        </script>
+
+        <!-- Click interaction -->
+        <script>
+            let start = null;
+            let end = null;
+            let markers = [];
+
+            map.on("click", function(e){
+                const {lat, lng} = e.latlng;
+
+                if (!start){
+                    start = [lat, lng];
+                    addMarker(lat, lng, "Start");
+                } else if (!end){
+                    end = [lat, lng];
+                    addMarker(lat, lng, "End");
+
+                    getRoute(); // call backend
+                } else {
+                    // reset
+                    clearMap();
+                    start = [lat, lng];
+                    end = null;
+                    addMarker(lat, lng, "Start");
+                }
+            }
+
+            );
+
+            function addMarker(lat, lon, label){
+                const marker = L.marker([lat, lon]).addTo(map)
+                    .bindPopup(label)
+                    .openPopup();
+                markers.push(marker);
+            }
+
+            function clearMap(){
+                markers.forEach(m => map.removeLayer(m));
+                markers = [];
+
+                if (routeLine){
+                    map.removeLayer(routeLine);
+                    routeLine = null;
+                }
+            }
+        </script>
+
+        <!-- Calling the API -->
+        <script>
+            async function getRoute() {
+                if (!start || !end) return;
+
+                const response = await fetch("http://127.0.0.1:8000/route", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        map: "osm_nyc",
+                        start_lat: start[0],
+                        start_lon: start[1],
+                        end_lat: end[0],
+                        end_lon: end[1],
+                        include_coordinates: true
+
+                    })
+                });
+
+                const data = await response.json();
+
+                console.log("API response:", data);
+
+                if (!data.coordinates){
+                    console.error("No coordinates in response!");
+                    return;
+                }
+
+                drawRoute(data.coordinates);
+            }
+        </script>
+
+        <!-- Draw Route -->
+         <script>
+            let routeLine = null;
+
+            function drawRoute(coords){
+
+                if (routeLine){
+                    map.removeLayer(routeLine);
+                }
+
+                routeLine = L.polyline(coords, {
+                    color: "blue"
+                }).addTo(map);
+
+                map.fitBounds(routeLine.getBounds());
+            }
+         </script>
+
+    </body>
+</html>
