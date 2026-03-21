@@ -40,6 +40,18 @@
 
         <!-- Click interaction -->
         <script>
+            const startIcon = new L.Icon({
+                iconUrl: './assets/marker_green.svg',
+                iconSize: [40, 50],
+                iconAnchor: [16, 32]
+            });
+
+            const endIcon = new L.Icon({
+                iconUrl: './assets/marker_red.svg',
+                iconSize: [40, 50],
+                iconAnchor: [16, 32]
+            });
+
             let start = null;
             let end = null;
             let markers = [];
@@ -49,10 +61,10 @@
 
                 if (!start){
                     start = [lat, lng];
-                    addMarker(lat, lng, "Start");
+                    addMarker(lat, lng, "Start", "start");
                 } else if (!end){
                     end = [lat, lng];
-                    addMarker(lat, lng, "End");
+                    addMarker(lat, lng, "End", "end");
 
                     getRoute(); // call backend
                 } else {
@@ -60,14 +72,23 @@
                     clearMap();
                     start = [lat, lng];
                     end = null;
-                    addMarker(lat, lng, "Start");
+                    addMarker(lat, lng, "Start", "start");
                 }
             }
 
             );
 
-            function addMarker(lat, lon, label){
-                const marker = L.marker([lat, lon]).addTo(map)
+            function addMarker(lat, lon, label, type){
+
+                let icon = null;
+
+                if (type==="start"){
+                    icon = startIcon;
+                } else if (type==="end"){
+                    icon = endIcon;
+                }
+
+                const marker = L.marker([lat, lon], {icon: icon}).addTo(map)
                     .bindPopup(label)
                     .openPopup();
                 markers.push(marker);
