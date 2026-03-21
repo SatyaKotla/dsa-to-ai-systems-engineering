@@ -16,8 +16,25 @@
         </script>
 
         <style>
-            #map{
+            #map {
                 height: 90vh;
+            }
+
+            #message {
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+
+                padding: 10px 20px;
+                border-radius: 5px;
+
+                display: none;
+
+                z-index: 1000;
+
+                font-weight: bold;
+
             }
         </style>
 
@@ -26,10 +43,7 @@
         <h2>Route Optimizer</h2>
         <h3 id="distance">Distance: -- </h3>
         <button onclick="resetMap()">Reset</button>
-        <div id="message"
-            style="display: none; padding:10px; margin:10px 0; border-radius: 5px;"
-        >
-        </div>
+        <div id="message"></div>
         <div id="map"></div>
 
         <script>
@@ -183,26 +197,26 @@
         <script>
             function showMessage(text, type="info"){
 
-                const msg = document.getElementById("message");
+                const _message = document.getElementById("message");
 
-                msg.innerText = text;
-                msg.style.display = "block";
+                _message.innerText = text;
+                _message.style.display = "block";
 
                 // Styling based on type
                 if (type === "warning"){
-                    msg.style.backgroundColor = "#ffeeba";
-                    msg.style.color = "#856404";
+                    _message.style.backgroundColor = "#ffeeba";
+                    _message.style.color = "#856404";
                 } else if (type === "error"){
-                    msg.style.backgroundColor = "#f8d7da";
-                    msg.style.color = "#721c24";
+                    _message.style.backgroundColor = "#f8d7da";
+                    _message.style.color = "#721c24";
                 } else {
-                    msg.style.backgroundColor = "#d1ecf1";
-                    msg.style.color = "#0c5460";
+                    _message.style.backgroundColor = "#d1ecf1";
+                    _message.style.color = "#0c5460";
                 }
 
                 // Auto hide after 3 seconds
                 setTimeout(() => {
-                    msg.style.display = "none";
+                    _message.style.display = "none";
                 }, 3000);
             }
         </script>
