@@ -24,6 +24,7 @@
     </head>
     <body>
         <h2>Route Optimizer</h2>
+        <h3 id="distance">Distance: -- </h3>
         <div id="map"></div>
 
         <script>
@@ -80,6 +81,9 @@
                     map.removeLayer(routeLine);
                     routeLine = null;
                 }
+
+                // Reset distance
+                document.getElementById("distance").innerText = "Distance: --";
             }
         </script>
 
@@ -116,6 +120,9 @@
                 }
 
                 drawRoute(data.coordinates);
+
+                document.getElementById("distance").innerText =
+                    `Distance: ${data.distance.toFixed(2)} meters`;
             }
         </script>
 
