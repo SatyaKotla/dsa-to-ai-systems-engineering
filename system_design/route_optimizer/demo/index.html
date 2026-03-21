@@ -26,6 +26,10 @@
         <h2>Route Optimizer</h2>
         <h3 id="distance">Distance: -- </h3>
         <button onclick="resetMap()">Reset</button>
+        <div id="message"
+            style="display: none; padding:10px; margin:10px 0; border-radius: 5px;"
+        >
+        </div>
         <div id="map"></div>
 
         <script>
@@ -70,7 +74,7 @@
                     getRoute(); // call backend
                 } else {
                     // reset
-                    alert("Route already exists. Press reset to start again.");
+                    showMessage("Route already exists. Press reset to start again.");
                 }
             }
 
@@ -112,6 +116,9 @@
 
                 // Reset distance
                 document.getElementById("distance").innerText = "Distance: --";
+
+                // Reset message
+                document.getElementById("message").style.display = "none";
             }
         </script>
 
@@ -155,7 +162,7 @@
         </script>
 
         <!-- Draw Route -->
-         <script>
+        <script>
             let routeLine = null;
 
             function drawRoute(coords){
@@ -170,7 +177,35 @@
 
                 map.fitBounds(routeLine.getBounds());
             }
-         </script>
+        </script>
+
+        <!-- Show message function-->
+        <script>
+            function showMessage(text, type="info"){
+
+                const msg = document.getElementById("message");
+
+                msg.innerText = text;
+                msg.style.display = "block";
+
+                // Styling based on type
+                if (type === "warning"){
+                    msg.style.backgroundColor = "#ffeeba";
+                    msg.style.color = "#856404";
+                } else if (type === "error"){
+                    msg.style.backgroundColor = "#f8d7da";
+                    msg.style.color = "#721c24";
+                } else {
+                    msg.style.backgroundColor = "#d1ecf1";
+                    msg.style.color = "#0c5460";
+                }
+
+                // Auto hide after 3 seconds
+                setTimeout(() => {
+                    msg.style.display = "none";
+                }, 3000);
+            }
+        </script>
 
     </body>
 </html>
