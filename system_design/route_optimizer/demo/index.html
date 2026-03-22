@@ -44,7 +44,28 @@
         <h3 id="distance">Distance: -- </h3>
         <button onclick="resetMap()">Reset</button>
         <div id="message"></div>
+        <label for="mapSelector"><b>Select Map:</b></label>
+        <select id="mapSelector">
+            <option value="grid_10">Grid 10</option>
+            <option value="grid_50">Grid 50</option>
+            <option value="osm_nyc">NYC (OSM)</option>
+        </select>
         <div id="map"></div>
+
+        <!-- Drop down -->
+         <script>
+            let selectedMap = "grid_10"; // default
+
+            document.getElementById("mapSelector").addEventListener("change", function(e) {
+                selectedMap = e.target.value;
+
+                console.log("Selected map:", selectedMap);
+
+                // Reset everything when map changes
+                resetMap();
+            })
+
+         </script>
 
         <script>
 
@@ -149,7 +170,7 @@
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        map: "osm_nyc",
+                        map: selectedMap,
                         start_lat: start[0],
                         start_lon: start[1],
                         end_lat: end[0],
