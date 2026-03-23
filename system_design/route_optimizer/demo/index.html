@@ -112,6 +112,13 @@
                 font-weight: 600;
                 font-size: 16px;
             }
+
+            #loading {
+                margin-top: 10px;
+                font-size: 14px;
+                color: #555;
+                font-style: italic;
+            }
         </style>
 
     </head>
@@ -131,6 +138,8 @@
                 <button onclick="resetMap()">Reset</button>
 
                 <p id="distance">Distance: --</p>
+
+                <p id="loading" style="display: none;">Calculating route...</p>
             </div>
 
             <div id="message"></div>
@@ -331,6 +340,8 @@
 
                 const API_BASE_URL = "http://127.0.0.1:8000"; // dev only
 
+                document.getElementById("loading").style.display = "block";
+
                 const response = await fetch(`${API_BASE_URL}/route`, {
                     method: "POST",
                     headers: {
@@ -352,12 +363,14 @@
                 console.log("API response:", data);
 
                 if (!data.coordinates){
+                    document.getElementById("loading").style.display= "none";
                     console.error("No coordinates in response!");
                     showMessage("Coordinates too far from map", "error")
                     return;
                 }
 
                 drawRoute(data.coordinates);
+                document.getElementById("loading").style.display= "none";
 
                 showMessage("Route calculated successfully", "info")
 
