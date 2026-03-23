@@ -386,6 +386,16 @@
                 // Reset distance
                 document.getElementById("distance").innerText = "Distance: --";
 
+                // Reset animation
+                if (routeLine) {
+                    map.removeLayer(routeLine);
+                    routeLine= null;
+                }
+
+                if (glowLine) {
+                    map.removeLayer(glowLine);
+                    glowLine = null;
+                }
                 // Reset message
                 document.getElementById("message").style.display = "none";
             }
@@ -432,31 +442,14 @@
                     return;
                 }
 
-                drawRoute(data.coordinates);
+                animateRoute(data.coordinates);
+
                 loading.style.visibility = "hidden";
 
                 showMessage("Route calculated successfully", "info")
 
                 document.getElementById("distance").innerText =
                     `Distance: ${data.distance.toFixed(2)} meters`;
-            }
-        </script>
-
-        <!-- Draw Route -->
-        <script>
-            let routeLine = null;
-
-            function drawRoute(coords){
-
-                if (routeLine){
-                    map.removeLayer(routeLine);
-                }
-
-                routeLine = L.polyline(coords, {
-                    color: "blue"
-                }).addTo(map);
-
-                map.fitBounds(routeLine.getBounds());
             }
         </script>
 
@@ -496,6 +489,54 @@
             // call once on load
             initializeMap();
         </script>
+
+        <!-- Animation Route -->
+         <script>
+
+            let routeLine = null;
+            let glowLine = null;
+
+            function animateRoute(coordinates){
+
+                // Remove old lines first
+                if (routeLine) {
+                    map.removeLayer(routeLine);
+                }
+
+                if (glowLine){
+                    map.removeLayer(glowLine)
+                }
+
+                let index = 0;
+
+                routeLine = L.polyline([], {
+                    color: "#7c3aed",
+                    weight: 6,
+                    opacity: 0.9
+                }).addTo(map);
+
+                // Glow layer
+                glowLine = L.polyline([], {
+                    color: "#93c5fd",
+                    weight: 10,
+                    opacity: 0.4
+                }).addTo(map);
+
+
+                function drawStep(){
+                    if (index >= coordinates.length) return;
+
+                    routeLine.addLatLng(coordinates[index]);
+                    glowLine.addLatLng(coordinates[index]);
+                    index++;
+
+                    setTimeout(drawStep, 120); // speed control
+                }
+
+                drawStep();
+
+            }
+         </script>
 
     </body>
 </html>
