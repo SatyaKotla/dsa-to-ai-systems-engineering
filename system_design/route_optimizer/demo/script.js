@@ -5,6 +5,8 @@ let end = null;
 let markers = [];
 
 let selectedMap = "grid_10"; // default
+let gridLayers = [];
+let gridNodeLayer = null;
 
 let routeLine = null;
 let glowLine = null;
@@ -58,7 +60,8 @@ document.getElementById("mapSelector").addEventListener("change", function(e) {
 
         // Grid Mode
         map.removeLayer(tileLayer);
-        drawGrid(gridSize);
+        drawGrid(gridSize); // Grid lines
+        drawGridNodes(gridSize); // Grid Nodes
     } else {
         // OSM Mode
         map.addLayer(tileLayer);
@@ -96,11 +99,17 @@ map.on("click", function(e){
 
 // 4.2 Grid Logic
 
-let gridLayers = [];
+
 
 function clearGrid(){
     gridLayers.forEach(layer => map.removeLayer(layer));
     gridLayers = [];
+
+    // Remove node layer (LayerGroup)
+    if (gridNodeLayer){
+        map.removeLayer(gridNodeLayer);
+        gridNodeLayer = null;
+    }
 }
 
 // draw grid
@@ -137,6 +146,32 @@ function getGridSize(mapName){
     }
 
     return null;
+}
+
+// Draw Nodes function
+function drawGridNodes(gridSize){
+
+    // Remove old nodes
+    if (gridNodeLayer){
+        map.removeLayer(gridNodeLayer);
+    }
+
+    gridNodeLayer = L.layerGroup().addTo(map);
+
+    for (let x = 0; x < gridSize; x++){
+        for (let y = 0; y < gridSize; y++){
+
+            const lat = x;
+            const lng = y;
+
+            L.circleMarker([lat, lng], {
+                radius: 4,
+                color: "#111827",
+                fillColor: "111827",
+                fillOpacity: 1
+            }).addTo(gridNodeLayer);
+        }
+    }
 }
 
 // 4.3 API Call
