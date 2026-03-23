@@ -15,42 +15,129 @@
             crossorigin="">
         </script>
 
-        <style>
-            #map {
-                height: 90vh;
-            }
+        <!-- Font import -->
+         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
+        <!--CSS-->
+        <style>
             #message {
                 position: fixed;
                 top: 20px;
                 left: 50%;
                 transform: translateX(-50%);
 
-                padding: 10px 20px;
-                border-radius: 5px;
+                padding: 12px 20px;
+                border-radius: 8px;
+
+                font-size: 14px;
+                font-weight: 500;
 
                 display: none;
 
                 z-index: 1000;
 
-                font-weight: bold;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
+            }
+
+            .message-info {
+                background: #e0f2fe;
+                color: #0369a1;
+            }
+
+            .message-warning {
+                background: #fef3c7;
+                color: #92400e;
+            }
+
+            .message-error {
+                background: #fee2e2;
+                color: #991b1b;
+            }
+
+            body{
+                font-family: "Inter", sans-serif;
+            }
+
+            #app {
+                display: flex;
+                height: 100vh;
+            }
+
+            #sidebar {
+                width: 260px;
+                padding: 20px;
+                background: #f9fafb;
+                border-right: 1px solid #e5e7eb;
+            }
+
+            #map{
+                flex: 1;
+            }
+
+            #sidebar h2{
+                margin-top: 0;
+                font-weight: 600;
+            }
+
+            #sidebar label{
+                display: block;
+                margin-top: 15px;
+                font-size: 14px;
+                color: #555;
+            }
+
+            #sidebar select,
+            #sidebar button {
+                width: 100%;
+                margin-top: 8px;
+                padding: 10px;
+                border-radius: 6px;
+                border: 1px solid #ccc;
+            }
+
+            #sidebar button {
+                background: #2563eb;
+                color: white;
+                border: none;
+                cursor: pointer;
+            }
+
+            #sidebar button:hover {
+                background: #1d4ed8;
+            }
+
+            #distance {
+                margin-top: 20px;
+                font-weight: 600;
+                font-size: 16px;
             }
         </style>
 
     </head>
     <body>
-        <h2>Route Optimizer</h2>
-        <h3 id="distance">Distance: -- </h3>
-        <button onclick="resetMap()">Reset</button>
-        <div id="message"></div>
-        <label for="mapSelector"><b>Select Map:</b></label>
-        <select id="mapSelector">
-            <option value="grid_10">Grid 10</option>
-            <option value="grid_50">Grid 50</option>
-            <option value="osm_nyc">NYC (OSM)</option>
-        </select>
-        <div id="map"></div>
+        <div id="app">
+
+            <div id="sidebar">
+                <h2>Route Optimizer</h2>
+
+                <label>Map</label>
+                <select id="mapSelector">
+                    <option value="grid_10">Grid 10</option>
+                    <option value="grid_50">Grid 50</option>
+                    <option value="osm_nyc">NYC (OSM)</option>
+                </select>
+
+                <button onclick="resetMap()">Reset</button>
+
+                <p id="distance">Distance: --</p>
+            </div>
+
+            <div id="message"></div>
+
+            <div id="map"></div>
+        </div>
+
 
         <!-- Drop down -->
          <script>
@@ -189,7 +276,7 @@
                     getRoute(); // call backend
                 } else {
                     // reset
-                    showMessage("Route already exists. Press reset to start again.");
+                    showMessage("Route already exists. Press reset to start again.", "warning");
                 }
             }
 
@@ -266,10 +353,13 @@
 
                 if (!data.coordinates){
                     console.error("No coordinates in response!");
+                    showMessage("Coordinates too far from map", "error")
                     return;
                 }
 
                 drawRoute(data.coordinates);
+
+                showMessage("Route calculated successfully", "info")
 
                 document.getElementById("distance").innerText =
                     `Distance: ${data.distance.toFixed(2)} meters`;
@@ -301,19 +391,12 @@
                 const _message = document.getElementById("message");
 
                 _message.innerText = text;
-                _message.style.display = "block";
 
-                // Styling based on type
-                if (type === "warning"){
-                    _message.style.backgroundColor = "#ffeeba";
-                    _message.style.color = "#856404";
-                } else if (type === "error"){
-                    _message.style.backgroundColor = "#f8d7da";
-                    _message.style.color = "#721c24";
-                } else {
-                    _message.style.backgroundColor = "#d1ecf1";
-                    _message.style.color = "#0c5460";
-                }
+                // Reset classes
+                _message.className = "";
+                _message.classList.add(`message-${type}`);
+
+                _message.style.display = "block";
 
                 // Auto hide after 3 seconds
                 setTimeout(() => {
