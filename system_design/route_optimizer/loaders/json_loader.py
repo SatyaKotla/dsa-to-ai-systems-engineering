@@ -18,7 +18,7 @@ class JSONMapLoader(BaseMapLoader):
         with open(source, "r") as f:
             data = json.load(f)
 
-        graph = Graph(directed=True)
+        graph = Graph(directed=False)
 
         # add nodes
         for node, coordinates in data["nodes"].items():
