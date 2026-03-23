@@ -63,7 +63,22 @@
 
                 // Reset everything when map changes
                 resetMap();
-            })
+                clearGrid();
+
+                const gridSize = getGridSize(selectedMap);
+
+                if (gridSize){
+
+                    // Grid Mode
+                    map.removeLayer(tileLayer);
+                    drawGrid(gridSize);
+                } else {
+                    // OSM Mode
+                    map.addLayer(tileLayer);
+                    clearGrid();
+                    setNYCView();
+                }
+            });
 
          </script>
 
@@ -71,11 +86,69 @@
 
             var map = L.map("map").setView([40.7580, -73.9855], 13);
 
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            const tileLayer =  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             }).addTo(map);
 
+            function setNYCView(){
+                map.setView([40.7580, -73.9855], 13);
+            }
+
+        </script>
+
+        <!--Grid-->
+        <script>
+            let gridLayers = [];
+
+            function clearGrid(){
+                gridLayers.forEach(layer => map.removeLayer(layer));
+                gridLayers = [];
+            }
+
+            // draw grid
+            function drawGrid(size){
+
+                for (let i=0; i <= size; i++){
+
+                    // vertical lines
+                    const vLine = L.polyline([[0, i], [size, i]], {
+                        color: "gray",
+                        weight: 1
+                    }).addTo(map);
+
+                    // Horizontal lines
+                    const hLine = L.polyline([[i, 0], [i, size]], {
+                        color: "gray",
+                        weight: 1
+                    }).addTo(map);
+
+                    gridLayers.push(vLine, hLine);
+                }
+
+                // Fit map to grid
+                map.fitBounds([
+                    [0, 0],
+                    [size, size]
+                ]);
+            }
+
+            // Detect Grid Size from Name
+            function getGridSize(mapName){
+                if (mapName.startsWith("grid_")){
+                    return parseInt(mapName.split("_")[1]);
+                }
+
+                return null;
+            }
+
+            // snap clicks to nearest grid node
+            function snapToGrid(lat, lon, size){
+                return [
+                    Math.round(lat),
+                    Math.round(lon)
+                ];
+            }
         </script>
 
         <!-- Click interaction -->
@@ -99,12 +172,19 @@
             map.on("click", function(e){
                 const {lat, lng} = e.latlng;
 
+                const gridSize = getGridSize(selectedMap);
+
+                // Snap ONLY for grid maps
+                const [finalLat, finalLng] = gridSize
+                    ? snapToGrid(lat, lng, gridSize)
+                    : [lat, lng];
+
                 if (!start){
-                    start = [lat, lng];
-                    addMarker(lat, lng, "Start", "start");
+                    start = [finalLat, finalLng];
+                    addMarker(finalLat, finalLng, "Start", "start");
                 } else if (!end){
-                    end = [lat, lng];
-                    addMarker(lat, lng, "End", "end");
+                    end = [finalLat, finalLng];
+                    addMarker(finalLat, finalLng, "End", "end");
 
                     getRoute(); // call backend
                 } else {
@@ -240,6 +320,22 @@
                     _message.style.display = "none";
                 }, 3000);
             }
+        </script>
+
+        <script>
+            function initializeMap(){
+                const gridSize = getGridSize(selectedMap);
+
+                if (gridSize){
+                    map.removeLayer(tileLayer);
+                    drawGrid(gridSize);
+                } else {
+                    map.addLayer(tileLayer);
+                }
+            }
+
+            // call once on load
+            initializeMap();
         </script>
 
     </body>
