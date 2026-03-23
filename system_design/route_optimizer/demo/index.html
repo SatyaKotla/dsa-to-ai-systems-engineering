@@ -118,6 +118,9 @@
                 font-size: 14px;
                 color: #555;
                 font-style: italic;
+
+                visibility: hidden; /* key change */
+                height: 20px; /* reservce space */
             }
 
             #legend {
@@ -175,7 +178,7 @@
 
                 <p id="distance">Distance: --</p>
 
-                <p id="loading" style="display: none;">Calculating route...</p>
+                <p id="loading">Calculating route...</p>
 
                 <div id="legend">
                     <h3>Legend</h3>
@@ -391,11 +394,14 @@
         <!-- Calling the API -->
         <script>
             async function getRoute() {
+
+                const loading = document.getElementById("loading");
+
                 if (!start || !end) return;
 
                 const API_BASE_URL = "http://127.0.0.1:8000"; // dev only
 
-                document.getElementById("loading").style.display = "block";
+                loading.style.visibility = "visible";
 
                 const response = await fetch(`${API_BASE_URL}/route`, {
                     method: "POST",
@@ -418,14 +424,16 @@
                 console.log("API response:", data);
 
                 if (!data.coordinates){
-                    document.getElementById("loading").style.display= "none";
+
+                    loading.style.visibility = "hidden";
+
                     console.error("No coordinates in response!");
                     showMessage("Coordinates too far from map", "error")
                     return;
                 }
 
                 drawRoute(data.coordinates);
-                document.getElementById("loading").style.display= "none";
+                loading.style.visibility = "hidden";
 
                 showMessage("Route calculated successfully", "info")
 
