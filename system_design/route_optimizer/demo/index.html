@@ -396,6 +396,11 @@
                     map.removeLayer(glowLine);
                     glowLine = null;
                 }
+
+                if (movingMarker) {
+                    map.removeLayer(movingMarker);
+                    movingMarker = null;
+                }
                 // Reset message
                 document.getElementById("message").style.display = "none";
             }
@@ -495,6 +500,13 @@
 
             let routeLine = null;
             let glowLine = null;
+            let movingMarker = null;
+
+            const carIcon = L.icon({
+                iconUrl: "assets/car.svg",
+                iconSize: [32, 32],
+                iconAnchor: [16, 16]
+            });
 
             function animateRoute(coordinates){
 
@@ -504,7 +516,11 @@
                 }
 
                 if (glowLine){
-                    map.removeLayer(glowLine)
+                    map.removeLayer(glowLine);
+                }
+
+                if (movingMarker){
+                    map.removeLayer(movingMarker);
                 }
 
                 let index = 0;
@@ -522,12 +538,18 @@
                     opacity: 0.4
                 }).addTo(map);
 
+                // Create moving marker at the start
+                movingMarker = L.marker(coordinates[0], {icon: carIcon}).addTo(map);
 
                 function drawStep(){
                     if (index >= coordinates.length) return;
 
                     routeLine.addLatLng(coordinates[index]);
                     glowLine.addLatLng(coordinates[index]);
+
+                    // Move marker
+                    movingMarker.setLatLng(coordinates[index]);
+
                     index++;
 
                     setTimeout(drawStep, 120); // speed control
