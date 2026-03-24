@@ -45,8 +45,11 @@ function setNYCView(){
 // 3. Event Listeners
 
 // 3.1 Drop Down
-document.getElementById("mapSelector").addEventListener("change", function(e) {
-    selectedMap = e.target.value;
+document.getElementById("mapSelector").addEventListener("change", loadSelectedMap);
+
+// Map Loader function
+function loadSelectedMap(){
+    selectedMap = document.getElementById("mapSelector").value;
 
     console.log("Selected map:", selectedMap);
 
@@ -68,7 +71,7 @@ document.getElementById("mapSelector").addEventListener("change", function(e) {
         clearGrid();
         setNYCView();
     }
-});
+}
 
 // 4. Core Logic
 
@@ -377,3 +380,4 @@ function initializeMap(){
 
 // call once on load
 initializeMap();
+loadSelectedMap();
