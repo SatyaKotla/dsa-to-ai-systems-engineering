@@ -115,16 +115,16 @@ function clearGrid(){
 // draw grid
 function drawGrid(size){
 
-    for (let i=0; i <= size; i++){
+    for (let i=0; i < size; i++){
 
         // vertical lines
-        const vLine = L.polyline([[0, i], [size, i]], {
+        const vLine = L.polyline([[0, i], [size-1, i]], {
             color: "gray",
             weight: 1
         }).addTo(map);
 
         // Horizontal lines
-        const hLine = L.polyline([[i, 0], [i, size]], {
+        const hLine = L.polyline([[i, 0], [i, size-1]], {
             color: "gray",
             weight: 1
         }).addTo(map);
@@ -135,7 +135,7 @@ function drawGrid(size){
     // Fit map to grid
     map.fitBounds([
         [0, 0],
-        [size, size]
+        [size-1, size-1]
     ]);
 }
 
