@@ -24,8 +24,9 @@ const endIcon = new L.Icon({
     iconAnchor: [16, 32]
 });
 
-const carIcon = L.icon({
-    iconUrl: "./assets/car.svg",
+const carIcon = L.divIcon({
+    className: "car-icon",
+    html: `<img id="car" src="./assets/car.svg" style="width:32px; transform-origin:center;" />`,
     iconSize: [32, 32],
     iconAnchor: [16, 16]
 });
@@ -270,9 +271,20 @@ function animateRoute(coordinates){
         // Move marker
         movingMarker.setLatLng(coordinates[index]);
 
+        // Rotation
+        if (index > 0){
+            const prev = coordinates[index - 1];
+            const angle = getRotationAngle(prev, coordinates[index]);
+
+            const markerElement = document.getElementById("car");
+            if (markerElement){
+                markerElement.style.transform = `rotate(${angle}deg)`;
+            }
+        }
+
         index++;
 
-        setTimeout(drawStep, 120); // speed control
+        setTimeout(drawStep, 200); // speed control
     }
 
     drawStep();
@@ -364,6 +376,16 @@ function snapToGrid(lat, lon, size){
         Math.round(lat),
         Math.round(lon)
     ];
+}
+
+// 5.4 Rotation Function
+function getRotationAngle(p1, p2){
+    const latDiff = p2[0] - p1[0];
+    const lngDiff = p2[1] - p1[1];
+
+    const angle = Math.atan2(lngDiff, latDiff) * (180 / Math.PI);
+
+    return angle;
 }
 
 // 6. APP Entry Point

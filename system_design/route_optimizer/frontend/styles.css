@@ -144,3 +144,6 @@ body{
 }
 
 /* 6. Utility / small tweaks */
+.car-icon img {
+    transition: transform 0.1s linear;
+}
