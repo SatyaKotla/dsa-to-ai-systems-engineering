@@ -49,7 +49,7 @@ Applies DSA concepts to real-world systems with full-stack implementations.
 ---
 ## 📚 Documentation
 
-Detailed documentation for the modules is managed centrally in the [docs/](/dsa-to-ai-systems-engineering/docs/) directory.
+Detailed documentation for the modules is managed centrally in the [docs/](./docs/) directory.
 
 ---
 ## ⚙️ Configuration
