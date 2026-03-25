@@ -1,4 +1,4 @@
-# DSA to AI Systems Engineering
+# 🍪 DSA to AI Systems Engineering
 A structured journey from core Data Structures & Algorithms (DSA) to systems-level thinking and AI engineering.
 
 This repository focuses on implementing fundamental concepts from scratch, including data structures, and algorithms in Python with clean design, unit testing, and performance awareness.
@@ -7,7 +7,7 @@ The goal is to build deep understanding of how systems behave under the hood.
 
 ---
 
-## Repository Overview
+## 📌 Repository Overview
 
 The repository is organized into multiple modules covering foundational areas of software engineering.
 
@@ -19,31 +19,26 @@ Each module contains implementations, tests, and documentation.
 
 ---
 
-## Core Data Structures and Algorithms
+### 🔹 Core Data Structures and Algorithms
 
-The core-dsa module contains implementations of fundamental data structures and algorithms.
+A reusable library of fundamental data structures and algorithms.
 
-### Data Strutures
-
-Examples include:
-
-- Arrays (Dynamic Array)
-- Graph (Adjaceny List, Disjoint Set)
-- Additional Structures: Heap/Prioty Queue, (future work)
-
-### Algorithms
-
-Algorithms implemented across multiple categories:
-
-- Array techniques (Sliding Window, Prefix Sum, Kadane's Algorithm)
-- Graph algorithms (BFS, DFS, Dijkstra, Topological Sort, etc.)
-- String algorithms
+Focus:
+- Core data structures (Dynamic Array, Graphs, Heaps etc.)
+- Algorithmic techniques (Array based, Graph Algorithms, String Algorithms etc.)
 
 For a full list of algorithms see:
 [Algorithms](./core_dsa/algorithms/readme.md)
 
+### 🔹 System Design
+
+Applies DSA concepts to real-world systems with full-stack implementations.
+
+#### Applications:
+- [**Route Optimization and Navigation**](./system_design/route_optimizer/) -> Graph-based routing system with A* and interactive visualization.
+
 ---
-## Project Structure
+## 📁 Project Structure
 
     repo-root/
     ├── core_dsa/                       # Core data structures and algorithmic patterns
@@ -52,8 +47,30 @@ For a full list of algorithms see:
     └── tests/                          # Unit tests (pytest)
 
 ---
+## 📚 Documentation
 
-## Running Tests
+Detailed documentation for the modules is managed centrally in the [docs/](/dsa-to-ai-systems-engineering/docs/) directory.
+
+---
+## ⚙️ Configuration
+
+Project dependencies and configurations are managed centrially via:
+
+`pyproject.toml`
+
+---
+## 🛠️ Development Tools
+
+This project uses:
+
+- Unit Testing: `pytest`
+- Code Formatting: `black`
+- Linting: `flake8`
+- Git Hooks (automated checks): `pre-commit`
+- CI Pipeline: GitHub Actions
+
+---
+## 🧪 Running Tests
 
 This project uses `pytest`
 
@@ -63,24 +80,16 @@ Run all tests:
 pytest
 ```
 ---
+## 🥅 Purpose
 
-## Development Tools
-
-This project uses:
-
-- `pytest` - unit testing
-- `black` - code formatting
-- `flake8` - linting
-- `pre-commit` - automated checks
-- GitHub Actions - CI pipeline
+This repository serves as a long-term knowledge base and reference implementation for fundamental concepts in computer science.
 
 ---
-## Future Work
+## ⏩ Future Work
 
 Additional modules will be added to expand this repository into broader software engineering domains.
 
 ---
+## 👨‍💻 Maintainer
 
-## Purpose
-
-This repository serves as a long-term knowledge base and reference implementation for fundamental concepts in computer science.
+* [@SatyaKotla](https://github.com/SatyaKotla)
