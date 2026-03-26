@@ -22,12 +22,12 @@ This project is part of the DSA-to-AI-Systems-Engineering monrepo and integrates
 ---
 ## 📚 Documentation
 
-Detailed documentation is available in the [docs/](/dsa-to-ai-systems-engineering/docs/route_optimizer/) directory:
+Detailed documentation is available in the [docs/](/docs/route_optimizer/) directory:
 
-- [architecture.md](/dsa-to-ai-systems-engineering/docs/route_optimizer/architecture.md) -> system design and component interaction
-- [routing_pipeline.md](/dsa-to-ai-systems-engineering/docs/route_optimizer/routing_pipeline.md) -> end-to-end routing flow
-- [map_format.md](/dsa-to-ai-systems-engineering/docs/route_optimizer/map_format.md) -> graph and map data formats
-- [api.md](/dsa-to-ai-systems-engineering/docs/route_optimizer/api.md)-> api specification
+- [architecture.md](/docs/route_optimizer/architecture.md) -> system design and component interaction
+- [routing_pipeline.md](/docs/route_optimizer/routing_pipeline.md) -> end-to-end routing flow
+- [map_format.md](/docs/route_optimizer/map_format.md) -> graph and map data formats
+- [api.md](/docs/route_optimizer/api.md)-> api specification
 
 ---
 ## 📂 Project Structure
