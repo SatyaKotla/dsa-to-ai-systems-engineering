@@ -1,16 +1,22 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
 from system_design.route_optimizer.api.models.route_request import RouteRequest
 from system_design.route_optimizer.api.models.route_response import RouteResponse
 from system_design.route_optimizer.services.map_manager import map_manager
 from system_design.route_optimizer.utils.logger import get_logger
+from system_design.route_optimizer.api.dependencies import verify_api_key
 
 loggger = get_logger(__name__)
 
 router = APIRouter()
 
 
-@router.post("/route", response_model=RouteResponse, response_model_exclude_none=True)
+@router.post(
+    "/route",
+    response_model=RouteResponse,
+    response_model_exclude_none=True,
+    dependencies=[Depends(verify_api_key)],
+)
 def compute_route(request: RouteRequest):
 
     loggger.info(f"API request received for map={request.map}")

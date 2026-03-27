@@ -186,13 +186,15 @@ async function getRoute() {
     if (!start || !end) return;
 
     const API_BASE_URL = "http://127.0.0.1:8000"; // dev only
+    const API_KEY = "dev-secret-key"; // test only
 
     loading.style.visibility = "visible";
 
     const response = await fetch(`${API_BASE_URL}/route`, {
         method: "POST",
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "x-api-key": API_KEY
         },
         body: JSON.stringify({
             map: selectedMap,
