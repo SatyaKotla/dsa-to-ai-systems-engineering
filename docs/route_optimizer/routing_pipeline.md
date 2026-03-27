@@ -1,4 +1,32 @@
 # 🔄 Routing Pipeline
+
+## 🔄 Routing Execution Flow
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Frontend
+    participant API
+    participant MapManager
+    participant MapRegistry
+    participant RoutingService
+    participant Router(AStar)
+
+    User->>Frontend: Select start & end points
+    Frontend->>API: POST /route
+    API->>MapManager: Process request
+    MapManager->>MapRegistry: Registers Map
+    MapRegistry->>RoutingService: Compute route
+    RoutingService->>Router(AStar): Run Router (A* algorithm)
+    Router(AStar)-->>RoutingService: Path + distance
+    RoutingService-->>MapRegistry: Computed Route
+    MapRegistry-->>MapManager: Returns Service
+    MapManager-->>API: Response
+    API-->>Frontend: JSON result
+    Frontend->>User: Display route
+```
+
+---
 ## 📌 Overview
 
 This document describes the end-to-end execution flow of a route request, from user interaction in the frontend to path computation in the backend and final visualization.

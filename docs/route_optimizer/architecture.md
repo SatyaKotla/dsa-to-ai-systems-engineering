@@ -1,5 +1,17 @@
 # 🧠 Architecture Overview: Route Optimization and Navigation System
 
+## 🏗️ System Architecture Diagram
+
+```mermaid
+flowchart TD;
+    A[Frontend]-->B[API Layer];
+    B --> C["Service Layer (MapManager)"];
+    C --> D[MapRegistry];
+    C --> E[Graph Loaders];
+    D --> F[RoutingService];
+    F --> G["Router Engine (A* Algorithm)"];
+```
+---
 ## 📌 Introduction
 
 The Route Optimization and Navigation System is designed to compute optimal paths between two points using graph-based algorithms and visualize the result through an interactive front-end.
