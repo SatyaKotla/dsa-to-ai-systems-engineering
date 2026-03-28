@@ -15,3 +15,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# health check
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
