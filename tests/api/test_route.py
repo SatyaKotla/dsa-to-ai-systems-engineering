@@ -3,6 +3,9 @@
 ####################################################
 from fastapi.testclient import TestClient
 from system_design.route_optimizer.api.main import app
+import os
+
+API_KEY = os.getenv("API_KEY", "dev-secret-key")
 
 client = TestClient(app)
 
@@ -19,6 +22,7 @@ def test_route_success():
             "end_lon": "9",
             "include_coordinates": False,
         },
+        headers={"x-api-key": API_KEY},
     )
 
     assert response.status_code == 200
@@ -42,6 +46,7 @@ def test_route_with_coordinates():
             "end_lon": "9",
             "include_coordinates": True,
         },
+        headers={"x-api-key": API_KEY},
     )
 
     assert response.status_code == 200
@@ -64,6 +69,7 @@ def test_route_same_start_end():
             "end_lon": "0",
             "include_coordinates": True,
         },
+        headers={"x-api-key": API_KEY},
     )
 
     assert response.status_code == 200
@@ -86,6 +92,7 @@ def test_route_invalid_input():
             "end_lon": "b",
             "include_coordinates": False,
         },
+        headers={"x-api-key": API_KEY},
     )
 
     assert response.status_code == 422
@@ -106,6 +113,7 @@ def test_route_invalid_map():
             "end_lon": "5",
             "include_coordinates": False,
         },
+        headers={"x-api-key": API_KEY},
     )
 
     assert response.status_code == 400
@@ -123,6 +131,7 @@ def test_route_out_of_bounds_coordinates():
             "end_lon": "200",
             "include_coordinates": False,
         },
+        headers={"x-api-key": API_KEY},
     )
 
     assert response.status_code == 400
