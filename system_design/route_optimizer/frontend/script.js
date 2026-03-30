@@ -52,7 +52,7 @@ document.getElementById("mapSelector").addEventListener("change", loadSelectedMa
 function loadSelectedMap(){
     selectedMap = document.getElementById("mapSelector").value;
 
-    console.log("Selected map:", selectedMap);
+    //console.log("Selected map:", selectedMap);
 
     // Reset everything when map changes
     resetMap();
@@ -185,8 +185,7 @@ async function getRoute() {
 
     if (!start || !end) return;
 
-    const API_BASE_URL = "http://127.0.0.1:8000"; // dev only
-    const API_KEY = "dev-secret-key"; // test only
+    const API_BASE_URL = "https://route-optimizer-gateway.onrender.com";
 
     loading.style.visibility = "visible";
 
@@ -194,7 +193,6 @@ async function getRoute() {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "x-api-key": API_KEY
         },
         body: JSON.stringify({
             map: selectedMap,
@@ -209,7 +207,7 @@ async function getRoute() {
 
     const data = await response.json();
 
-    console.log("API response:", data);
+    //console.log("API response:", data);
 
     if (!data.coordinates){
 
