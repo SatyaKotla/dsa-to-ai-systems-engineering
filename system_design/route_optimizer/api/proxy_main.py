@@ -17,7 +17,6 @@ import requests
 from system_design.route_optimizer.api.models.route_request import RouteRequest
 from system_design.route_optimizer.api.models.route_response import RouteResponse
 
-
 #################################
 # 2. App Initialization
 #################################
