@@ -29,7 +29,7 @@ async def proxy_route(request: RouteRequest):
 # accept frontend calls
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://route-optimizer-khaki.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
