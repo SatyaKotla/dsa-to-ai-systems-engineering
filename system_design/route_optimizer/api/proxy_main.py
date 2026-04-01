@@ -71,12 +71,17 @@ API_KEY = os.getenv("API_KEY")
 @limiter.limit("10/minute")  # rate limit
 async def proxy_route(request: Request, body: RouteRequest):
 
+    print(f"[GATEWAY] Incoming request for map ={body.map}")
+
     response = requests.post(
         BACKEND_URL,
         json=body.model_dump(),
         headers={"x-api-key": API_KEY, "Content-Type": "application/json"},
         timeout=10,
     )
+
+    print(f"[GATEWAY] Response status={response.status_code}")
+
     if response.headers.get("content-type", "").startswith("application/json"):
         return response.json()
     else:
