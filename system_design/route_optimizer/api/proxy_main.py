@@ -93,4 +93,7 @@ async def proxy_route(request: Request, body: RouteRequest):
 #########################
 @app.get("/health")
 def health_check():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "service": "gateway",
+    }
