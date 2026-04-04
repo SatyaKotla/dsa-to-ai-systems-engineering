@@ -19,6 +19,9 @@ from system_design.route_optimizer.api.models.route_request import RouteRequest
 from system_design.route_optimizer.api.models.route_response import RouteResponse
 
 from jose import jwt
+from jose import JWTError, ExpiredSignatureError
+
+from datetime import datetime, UTC, timedelta
 
 #################################
 # 2. App Initialization
@@ -70,7 +73,10 @@ ALGORITHM = "HS256"
 
 
 def create_access_token(user_id: str):
-    payload = {"sub": user_id}
+    payload = {
+        "sub": user_id,
+        "exp": datetime.now(UTC) + timedelta(minutes=30),  # expiry
+    }
     token = jwt.encode(payload, key=JWT_SECRET_KEY, algorithm=ALGORITHM)
     return token
 
@@ -101,7 +107,10 @@ def verify_jwt(Authorization: str = Header(None)):
         payload = jwt.decode(token=token, key=JWT_SECRET_KEY, algorithms=[ALGORITHM])
         return payload
 
-    except Exception:
+    except ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="Token expired")
+
+    except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
 
 

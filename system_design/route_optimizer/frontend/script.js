@@ -214,11 +214,11 @@ async function getRoute() {
         await login();
     }
 
-    const response = await fetch(`${API_BASE_URL}/route`, {
+    let response = await fetch(`${API_BASE_URL}/route`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer"+" "+authToken,
+            "Authorization": "Bearer " + authToken,
         },
         body: JSON.stringify({
             map: selectedMap,
@@ -230,6 +230,34 @@ async function getRoute() {
 
         })
     });
+
+    // handle expiry
+    if (response.status == 401) {
+        console.log("Token expired, logging in again...");
+
+        localStorage.removeItem("token");
+        authToken=null;
+
+        await login();
+
+        //retry once
+        response = await fetch(`${API_BASE_URL}/route`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + authToken,
+            },
+            body: JSON.stringify({
+                map: selectedMap,
+                start_lat: start[0],
+                start_lon: start[1],
+                end_lat: end[0],
+                end_lon: end[1],
+                include_coordinates: true
+
+            })
+        });
+    }
 
     const data = await response.json();
 
