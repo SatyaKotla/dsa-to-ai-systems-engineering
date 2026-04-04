@@ -3,6 +3,7 @@ let map;
 let start = null;
 let end = null;
 let markers = [];
+let authToken = localStorage.getItem("token");
 
 let selectedMap = "grid_10"; // default
 let gridLayers = [];
@@ -179,6 +180,25 @@ function drawGridNodes(gridSize){
 }
 
 // 4.3 API Call
+async function login() {
+
+    if (authToken) return; // prevent repeated login
+
+    try{
+        const response = await fetch("https://route-optimizer-gateway.onrender.com/login",{
+            method: "POST",
+        });
+
+        const data = await response.json();
+        authToken = data.access_token;
+        localStorage.setItem("token", authToken);
+
+        console.log("Logged in successfully");
+    } catch (error){
+        console.error("Login failed", error);
+    }
+
+}
 async function getRoute() {
 
     const loading = document.getElementById("loading");
@@ -189,10 +209,16 @@ async function getRoute() {
 
     loading.style.visibility = "visible";
 
+    //login
+    if (!authToken){
+        await login();
+    }
+
     const response = await fetch(`${API_BASE_URL}/route`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            "Authorization": "Bearer"+" "+authToken,
         },
         body: JSON.stringify({
             map: selectedMap,
