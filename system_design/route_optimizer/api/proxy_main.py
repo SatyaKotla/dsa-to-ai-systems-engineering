@@ -5,7 +5,9 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi import Request
-from fastapi import Depends, Header
+from fastapi import Depends
+from fastapi import Response
+from fastapi import Cookie
 
 from slowapi import Limiter
 from slowapi.util import get_remote_address
@@ -85,26 +87,29 @@ def create_access_token(user_id: str):
 # 7. JWT Authentication
 ##################################
 @app.post("/login")
-def login():
+def login(response: Response):
     token = create_access_token("demo_user")
-    return {"access_token": token}
+
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        secure=True,  # True in Production (HTTPS)
+        samesite="lax",
+    )
+    return {"message": "Login successful"}
 
 
-def verify_jwt(Authorization: str = Header(None)):
+def verify_jwt(access_token: str = Cookie(None)):
     print("Verifying JWT Authorization ...")
-    if not Authorization:
+    if not access_token:
         raise HTTPException(status_code=401, detail="Missing token")
 
     try:
-        parts = Authorization.split(" ")
-
-        if len(parts) != 2 or parts[0] != "Bearer":
-            raise HTTPException(status_code=401, detail="Invalid token format")
-
-        token = parts[1]
-
         print("Token extracted")
-        payload = jwt.decode(token=token, key=JWT_SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(
+            token=access_token, key=JWT_SECRET_KEY, algorithms=[ALGORITHM]
+        )
         return payload
 
     except ExpiredSignatureError:

@@ -216,9 +216,9 @@ async function getRoute() {
 
     let response = await fetch(`${API_BASE_URL}/route`, {
         method: "POST",
+        credentials: "include",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": "Bearer " + authToken,
         },
         body: JSON.stringify({
             map: selectedMap,
@@ -243,9 +243,9 @@ async function getRoute() {
         //retry once
         response = await fetch(`${API_BASE_URL}/route`, {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": "Bearer " + authToken,
             },
             body: JSON.stringify({
                 map: selectedMap,
