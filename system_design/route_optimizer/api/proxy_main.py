@@ -100,6 +100,12 @@ def login(response: Response):
     return {"message": "Login successful"}
 
 
+@app.post("/logout")
+def logout(response: Response):
+    response.delete_cookie("access_token")
+    return {"message": "Logged out"}
+
+
 def verify_jwt(access_token: str = Cookie(None)):
     print("Verifying JWT Authorization ...")
     if not access_token:
