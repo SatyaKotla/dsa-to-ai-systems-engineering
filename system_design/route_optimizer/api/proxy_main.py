@@ -125,6 +125,11 @@ def verify_jwt(access_token: str = Cookie(None)):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 
+@app.get("/me")
+def get_current_user(user=Depends(verify_jwt)):
+    return {"status": "authenticated", "user": user}
+
+
 ####################################
 # 8. Routes
 ####################################

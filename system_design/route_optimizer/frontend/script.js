@@ -32,6 +32,10 @@ const carIcon = L.divIcon({
     iconAnchor: [16, 16]
 });
 
+const API_BASE_URL = "https://route-optimizer-gateway.onrender.com";
+
+let isLoggedIn = false;
+
 // 2. Initialization
 map = L.map("map").setView([40.7580, -73.9855], 13);
 
@@ -75,10 +79,20 @@ function loadSelectedMap(){
     }
 }
 
+// 3.2 Authentication
+document.getElementById("login-btn").onclick = login;
+document.getElementById("logout-btn").onclick = logout;
+
 // 4. Core Logic
 
 // 4.1 Handle Map Click
 map.on("click", function(e){
+
+    // Block if not logged in
+    if (!isLoggedIn){
+        showMessage("Please login first", "warning");
+        return;
+    }
     const {lat, lng} = e.latlng;
 
     const gridSize = getGridSize(selectedMap);
@@ -181,38 +195,70 @@ function drawGridNodes(gridSize){
 
 // 4.3 API Call
 async function login() {
-
-    if (authToken) return; // prevent repeated login
-
     try{
-        const response = await fetch("https://route-optimizer-gateway.onrender.com/login",{
+        const response = await fetch(`${API_BASE_URL}/login`,{
             method: "POST",
+            credentials: "include"
         });
 
-        const data = await response.json();
-        authToken = data.access_token;
-        localStorage.setItem("token", authToken);
+        if (response.ok){
+            await updateAuthStatus();
+        }
 
         console.log("Logged in successfully");
+
     } catch (error){
         console.error("Login failed", error);
     }
 
 }
+
+// Logout
+async function logout() {
+    try{
+        const response = await fetch(`${API_BASE_URL}/logout`,{
+            method: "POST",
+            credentials: "include"
+        });
+
+        if (response.ok){
+            await updateAuthStatus();
+        }
+
+        console.log("Logged out successfully");
+
+    } catch (error){
+        console.error("Logout failed", error);
+    }
+
+}
+
+// Check login
+async function  updateAuthStatus() {
+
+    try{
+        const response = await fetch(`${API_BASE_URL}/me`,{
+        credentials: "include"
+        });
+
+        if (response.ok){
+            updateAuthUI(true);
+        } else {
+            updateAuthUI(false);
+        }
+    } catch (error){
+        console.error("Auth check failed", error);
+        updateAuthUI(false);
+    }
+}
+
 async function getRoute() {
 
     const loading = document.getElementById("loading");
 
     if (!start || !end) return;
 
-    const API_BASE_URL = "https://route-optimizer-gateway.onrender.com";
-
     loading.style.visibility = "visible";
-
-    //login
-    if (!authToken){
-        await login();
-    }
 
     let response = await fetch(`${API_BASE_URL}/route`, {
         method: "POST",
@@ -233,30 +279,8 @@ async function getRoute() {
 
     // handle expiry
     if (response.status == 401) {
-        console.log("Token expired, logging in again...");
-
-        localStorage.removeItem("token");
-        authToken=null;
-
-        await login();
-
-        //retry once
-        response = await fetch(`${API_BASE_URL}/route`, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                map: selectedMap,
-                start_lat: start[0],
-                start_lon: start[1],
-                end_lat: end[0],
-                end_lon: end[1],
-                include_coordinates: true
-
-            })
-        });
+        showMessage("Please login first", "warning");
+        return;
     }
 
     const data = await response.json();
@@ -442,6 +466,25 @@ function getRotationAngle(p1, p2){
     return angle;
 }
 
+// 5.5 Authentication UI controller
+function updateAuthUI(status){
+    let loginBtn = document.getElementById("login-btn");
+    let logoutBtn = document.getElementById("logout-btn");
+    let statusElement = document.getElementById("status");
+
+    isLoggedIn = status;
+
+    if (status){
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "block";
+        statusElement.innerText = "Logged In";
+    } else{
+        loginBtn.style.display = "block";
+        logoutBtn.style.display = "none";
+        statusElement.innerText = "Not Logged In";
+    }
+}
+
 // 6. APP Entry Point
 function initializeMap(){
     const gridSize = getGridSize(selectedMap);
@@ -457,3 +500,4 @@ function initializeMap(){
 // call once on load
 initializeMap();
 loadSelectedMap();
+updateAuthStatus();
