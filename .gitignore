@@ -32,3 +32,6 @@ cache/
 # ignore osm_http cache
 system_design/route_optimizer/data/osm_http_cache/*
 !system_design/route_optimizer/data/osm_http_cache/.gitkeep
+
+# ignore schema refactoring for now
+system_design/route_optimizer/engine/schemas/*
