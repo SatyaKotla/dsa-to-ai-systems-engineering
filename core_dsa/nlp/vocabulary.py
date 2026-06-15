@@ -28,9 +28,10 @@ class Vocabulary:
         encoded_list = DynamicArray()
 
         for token in tokens:
-            if token in self.word_to_id:
+            try:
                 encoded_list.append(self.word_to_id[token])
-            else:
+
+            except KeyError:
                 raise KeyError(f"Token '{token}' not found in vocabulary")
 
         return encoded_list
