@@ -36,6 +36,18 @@ class Vocabulary:
 
         return encoded_list
 
+    def decode(self, token_ids: DynamicArray):
+        decoded_list = DynamicArray()
+
+        for token_id in token_ids:
+            try:
+                decoded_list.append(self.id_to_word[token_id])
+
+            except KeyError:
+                raise KeyError(f"Token ID '{token_id}' not found in vocabulary")
+
+        return decoded_list
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -48,10 +60,10 @@ def main() -> None:
 
     vocab.build(tokens)
 
-    tokens = ["hello", "world"]
+    token_ids = [0, 1]
 
-    encoded = vocab.encode(tokens)
-    print(encoded.to_list())
+    decoded = vocab.decode(token_ids)
+    print(decoded.to_list())
 
 
 if __name__ == "__main__":
