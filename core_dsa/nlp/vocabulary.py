@@ -24,6 +24,17 @@ class Vocabulary:
         for token in tokens:
             self.add_word(token)
 
+    def encode(self, tokens: DynamicArray):
+        encoded_list = DynamicArray()
+
+        for token in tokens:
+            if token in self.word_to_id:
+                encoded_list.append(self.word_to_id[token])
+            else:
+                raise KeyError(f"Token '{token}' not found in vocabulary")
+
+        return encoded_list
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -36,8 +47,10 @@ def main() -> None:
 
     vocab.build(tokens)
 
-    print(vocab.id_to_word)
-    print(vocab.word_to_id)
+    tokens = ["hello", "world"]
+
+    encoded = vocab.encode(tokens)
+    print(encoded.to_list())
 
 
 if __name__ == "__main__":
