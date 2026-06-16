@@ -10,8 +10,9 @@ class Vocabulary:
     EOS_TOKEN = "<EOS>"
 
     def __init__(self):
-        self.word_to_id = {}
-        self.id_to_word = {}
+        self.word_to_id = {}  # Word to ID mappings
+        self.id_to_word = {}  # ID to word mappings
+        self.word_counts = {}  # Word frequency count
 
         self.add_word(self.PAD_TOKEN)
         self.add_word(self.UNK_TOKEN)
@@ -33,6 +34,11 @@ class Vocabulary:
 
         for token in tokens:
             self.add_word(token)
+
+            if token in self.word_counts:
+                self.word_counts[token] += 1
+            else:
+                self.word_counts[token] = 1
 
     def encode(self, tokens: DynamicArray):
         encoded_list = DynamicArray()
@@ -74,6 +80,18 @@ class Vocabulary:
 
         return new_tokens
 
+    def get_word_frequency(self, word: str) -> int:
+
+        try:
+            return self.word_counts[word]
+
+        except KeyError:
+            return 0
+
+    def get_all_frequencies(self):
+
+        return self.word_counts
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -84,8 +102,9 @@ def main() -> None:
 
     vocab = Vocabulary()
 
-    new_tokens = vocab.add_special_tokens(tokens)
-    print(f"New tokens: {new_tokens.to_list()}")
+    vocab.build(tokens)
+    print(f"Frequency of words : {vocab.get_all_frequencies()}")
+    print(f"Frequency of hello: {vocab.get_word_frequency('hello')}")
 
 
 if __name__ == "__main__":
