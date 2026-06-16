@@ -4,9 +4,19 @@ from core_dsa.nlp.tokenizer import ManualTokenizer
 
 class Vocabulary:
 
+    PAD_TOKEN = "<PAD>"
+    UNK_TOKEN = "<UNK>"
+    BOS_TOKEN = "<BOS>"
+    EOS_TOKEN = "<EOS>"
+
     def __init__(self):
         self.word_to_id = {}
         self.id_to_word = {}
+
+        self.add_word(self.PAD_TOKEN)
+        self.add_word(self.UNK_TOKEN)
+        self.add_word(self.BOS_TOKEN)
+        self.add_word(self.EOS_TOKEN)
 
     def add_word(self, word: str):
 
@@ -60,10 +70,8 @@ def main() -> None:
 
     vocab.build(tokens)
 
-    token_ids = [0, 1]
-
-    decoded = vocab.decode(token_ids)
-    print(decoded.to_list())
+    print(vocab.id_to_word)
+    print(vocab.word_to_id)
 
 
 if __name__ == "__main__":
