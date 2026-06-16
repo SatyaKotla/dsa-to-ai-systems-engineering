@@ -28,6 +28,17 @@ class BPE:
 
         return pair_frequencies
 
+    def get_best_pair(self, pair_frequencies: dict):
+        best_pair = None
+        best_frequency = 0
+
+        for pair, frequency in pair_frequencies.items():
+            if frequency > best_frequency:
+                best_frequency = frequency
+                best_pair = pair
+
+        return best_pair
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -36,8 +47,9 @@ def main() -> None:
 
     bpe = BPE()
     symbols = bpe.word_to_symbols(text)
+    pair_frequencies = bpe.get_pair_frequencies(symbols)
 
-    print(bpe.get_pair_frequencies(symbols))
+    print(bpe.get_best_pair(pair_frequencies))
 
 
 if __name__ == "__main__":
