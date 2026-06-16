@@ -59,6 +59,21 @@ class Vocabulary:
 
         return decoded_list
 
+    def add_special_tokens(self, tokens: DynamicArray) -> DynamicArray:
+        begin_token = self.BOS_TOKEN
+        end_token = self.EOS_TOKEN
+
+        new_tokens = DynamicArray()
+
+        new_tokens.append(begin_token)
+
+        for token in tokens:
+            new_tokens.append(token)
+
+        new_tokens.append(end_token)
+
+        return new_tokens
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -69,17 +84,8 @@ def main() -> None:
 
     vocab = Vocabulary()
 
-    vocab.build(tokens)
-
-    print(f"ID to word mappings: {vocab.id_to_word}")
-    print(f"Word to ID mappings: {vocab.word_to_id}")
-    new_text = "hello chatgpt world"
-    new_tokens = tokenizer.tokenize(new_text)
-    encoded_list = vocab.encode(new_tokens)
-    decoded_list = vocab.decode(encoded_list)
-    print(f"Input text: {new_text}")
-    print(f"Encoded: {encoded_list.to_list()}")
-    print(f"Decoded: {decoded_list.to_list()}")
+    new_tokens = vocab.add_special_tokens(tokens)
+    print(f"New tokens: {new_tokens.to_list()}")
 
 
 if __name__ == "__main__":
