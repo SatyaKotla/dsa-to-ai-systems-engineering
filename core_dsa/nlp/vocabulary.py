@@ -37,6 +37,13 @@ class Vocabulary:
             else:
                 self.word_counts[token] = 1
 
+    def reset(self):
+        self.word_to_id.clear()
+        self.id_to_word.clear()
+        self.word_counts.clear()
+
+        self._initialize_special_tokens()
+
     def encode(self, tokens: DynamicArray):
         encoded_list = DynamicArray()
         unknown_id = self.word_to_id[self.UNK_TOKEN]
@@ -109,7 +116,9 @@ def main() -> None:
 
     vocab.build(tokens)
 
-    print(vocab.word_to_id)
+    print(f"Word to ID mapping before reset: {vocab.word_to_id}")
+    vocab.reset()
+    print(f"Word to ID mapping after reset: {vocab.word_to_id}")
 
 
 if __name__ == "__main__":
