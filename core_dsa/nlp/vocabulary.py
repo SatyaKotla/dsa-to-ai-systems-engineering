@@ -14,10 +14,7 @@ class Vocabulary:
         self.id_to_word = {}  # ID to word mappings
         self.word_counts = {}  # Word frequency count
 
-        self.add_word(self.PAD_TOKEN)
-        self.add_word(self.UNK_TOKEN)
-        self.add_word(self.BOS_TOKEN)
-        self.add_word(self.EOS_TOKEN)
+        self._initialize_special_tokens()  # initialize the special tokens
 
     def add_word(self, word: str):
 
@@ -92,6 +89,14 @@ class Vocabulary:
 
         return self.word_counts
 
+    # Helper functions
+    def _initialize_special_tokens(self) -> None:
+
+        self.add_word(self.PAD_TOKEN)
+        self.add_word(self.UNK_TOKEN)
+        self.add_word(self.BOS_TOKEN)
+        self.add_word(self.EOS_TOKEN)
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -103,8 +108,8 @@ def main() -> None:
     vocab = Vocabulary()
 
     vocab.build(tokens)
-    print(f"Frequency of words : {vocab.get_all_frequencies()}")
-    print(f"Frequency of hello: {vocab.get_word_frequency('hello')}")
+
+    print(vocab.word_to_id)
 
 
 if __name__ == "__main__":
