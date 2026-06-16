@@ -36,13 +36,14 @@ class Vocabulary:
 
     def encode(self, tokens: DynamicArray):
         encoded_list = DynamicArray()
+        unknown_id = self.word_to_id[self.UNK_TOKEN]
 
         for token in tokens:
             try:
                 encoded_list.append(self.word_to_id[token])
 
             except KeyError:
-                raise KeyError(f"Token '{token}' not found in vocabulary")
+                encoded_list.append(unknown_id)
 
         return encoded_list
 
@@ -62,7 +63,7 @@ class Vocabulary:
 def main() -> None:
     "Entry point for manual execution."
 
-    text = "hello world hello world"
+    text = "hello world"
     tokenizer = ManualTokenizer()
     tokens = tokenizer.tokenize(text)
 
@@ -70,8 +71,15 @@ def main() -> None:
 
     vocab.build(tokens)
 
-    print(vocab.id_to_word)
-    print(vocab.word_to_id)
+    print(f"ID to word mappings: {vocab.id_to_word}")
+    print(f"Word to ID mappings: {vocab.word_to_id}")
+    new_text = "hello chatgpt world"
+    new_tokens = tokenizer.tokenize(new_text)
+    encoded_list = vocab.encode(new_tokens)
+    decoded_list = vocab.decode(encoded_list)
+    print(f"Input text: {new_text}")
+    print(f"Encoded: {encoded_list.to_list()}")
+    print(f"Decoded: {decoded_list.to_list()}")
 
 
 if __name__ == "__main__":
