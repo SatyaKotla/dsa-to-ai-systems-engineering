@@ -96,6 +96,25 @@ class Vocabulary:
 
         return self.word_counts
 
+    def pad_sequence(self, tokens: DynamicArray, max_length: int) -> DynamicArray:
+
+        if len(tokens) > max_length:
+            raise ValueError(
+                f"Length of tokens {len(tokens)} exceeds max length of padded sequence"
+            )
+
+        pad_token = self.PAD_TOKEN
+
+        padded_tokens = DynamicArray()
+
+        for token in tokens:
+            padded_tokens.append(token)
+
+        while len(padded_tokens) < max_length:
+            padded_tokens.append(pad_token)
+
+        return padded_tokens
+
     # Helper functions
     def _initialize_special_tokens(self) -> None:
 
@@ -114,11 +133,9 @@ def main() -> None:
 
     vocab = Vocabulary()
 
-    vocab.build(tokens)
+    padded = vocab.pad_sequence(tokens, max_length=5)
 
-    print(f"Word to ID mapping before reset: {vocab.word_to_id}")
-    vocab.reset()
-    print(f"Word to ID mapping after reset: {vocab.word_to_id}")
+    print(padded.to_list())
 
 
 if __name__ == "__main__":
