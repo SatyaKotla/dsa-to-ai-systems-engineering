@@ -11,14 +11,14 @@ class NGram:
 
         self.n = n
 
-    def generate(self, tokens: DynamicArray) -> DynamicArray:
+    def generate(self, sequence) -> DynamicArray:
 
         n_grams = DynamicArray()
 
-        for start in range(len(tokens) - self.n + 1):
+        for start in range(len(sequence) - self.n + 1):
             n_gram_temp = DynamicArray()
             for i in range(self.n):
-                n_gram_temp.append(tokens[start + i])
+                n_gram_temp.append(sequence[start + i])
             n_grams.append(tuple(n_gram_temp))
 
         return n_grams
