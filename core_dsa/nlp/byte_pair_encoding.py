@@ -132,6 +132,17 @@ class BPE:
         with open(filepath, "w") as file:
             json.dump(merge_list, file, indent=4)
 
+    # Save merges
+    def load_merges(self, filepath: str):
+
+        self.merges = DynamicArray()
+
+        with open(filepath, "r") as file:
+            merge_list = json.load(file)
+
+        for pair in merge_list:
+            self.merges.append(tuple(pair))
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -147,6 +158,11 @@ def main() -> None:
     bpe.train(words)
 
     bpe.save_merges("merges.json")
+
+    bpe2 = BPE(3)
+
+    bpe2.load_merges("merges.json")
+    print(bpe2.merges.to_list())
 
 
 if __name__ == "__main__":
