@@ -114,6 +114,12 @@ class BPE:
 
         return symbols
 
+    def decode(self, symbols: tuple) -> str:
+
+        decoded_word = "".join(symbols)
+
+        return decoded_word
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -132,7 +138,11 @@ def main() -> None:
 
     print(bpe.merges.to_list())
 
-    print(bpe.encode("slowest"))
+    symbols = bpe.encode("slowest")
+
+    print(symbols)
+
+    print(bpe.decode(symbols))
 
 
 if __name__ == "__main__":
