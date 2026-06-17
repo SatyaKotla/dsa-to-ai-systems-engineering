@@ -4,6 +4,10 @@ from core_dsa.nlp.ngram_generator import NGram
 
 class BPE:
 
+    def __init__(self, num_merges: int):
+        self.num_merges = num_merges
+        self.merges = DynamicArray()
+
     def word_to_symbols(self, word: str) -> tuple:
         symbols = DynamicArray()
 
@@ -56,17 +60,67 @@ class BPE:
 
         return tuple(merged_symbols)
 
+    def train(self, words: DynamicArray):
+
+        # Convert words to symbol tuples
+        corpus = DynamicArray()
+
+        for word in words:
+            corpus.append(self.word_to_symbols(word))
+
+        # Perform multiple merge operations
+        for _ in range(self.num_merges):
+
+            pair_frequencies = {}
+
+            # count pair frequencies across entire corpus
+            for symbols in corpus:
+
+                word_frequencies = self.get_pair_frequencies(symbols)
+
+                for pair, frequency in word_frequencies.items():
+                    if pair in pair_frequencies:
+                        pair_frequencies[pair] += frequency
+                    else:
+                        pair_frequencies[pair] = frequency
+
+            # Find most frequent pair
+            best_pair = self.get_best_pair(pair_frequencies)
+
+            # If no pairs to merge
+            if best_pair is None:
+                break
+
+            # Save learned merge rule
+            self.merges.append(best_pair)
+
+            # Apply merge to every word
+            new_corpus = DynamicArray()
+
+            for symbols in corpus:
+                new_corpus.append(self.merge_pair(symbols, best_pair))
+
+            corpus = new_corpus
+
+        return corpus
+
 
 def main() -> None:
     "Entry point for manual execution."
 
-    text = "hello"
+    words = DynamicArray()
 
-    bpe = BPE()
-    symbols = bpe.word_to_symbols(text)
-    pair = ("h", "e")
+    words.append("low")
+    words.append("lower")
+    words.append("lowest")
 
-    print(bpe.merge_pair(symbols, pair))
+    bpe = BPE(6)
+
+    corpus = bpe.train(words)
+
+    print(corpus.to_list())
+
+    print(bpe.merges.to_list())
 
 
 if __name__ == "__main__":
