@@ -73,3 +73,27 @@ def test_bpe_roundtrip():
     decoded = bpe.decode(encoded)
 
     assert decoded == word
+
+
+# Save/Load merges
+def test_bpe_save_load_merges():
+    words = DynamicArray()
+
+    words.append("low")
+    words.append("lower")
+    words.append("lowest")
+
+    bpe1 = BPE(3)
+
+    bpe1.train(words)
+
+    bpe1.save_merges("merges.json")
+
+    bpe2 = BPE(3)
+
+    bpe2.load_merges("merges.json")
+
+    encoded1 = bpe1.encode("slowest")
+    encoded2 = bpe2.encode("slowest")
+
+    assert encoded1 == encoded2
