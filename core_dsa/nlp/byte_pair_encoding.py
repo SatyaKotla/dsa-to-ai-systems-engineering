@@ -104,6 +104,16 @@ class BPE:
 
         return corpus
 
+    def encode(self, word: str) -> tuple:
+
+        symbols = self.word_to_symbols(word)
+
+        for pair in self.merges:
+
+            symbols = self.merge_pair(symbols, pair)
+
+        return symbols
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -114,13 +124,15 @@ def main() -> None:
     words.append("lower")
     words.append("lowest")
 
-    bpe = BPE(6)
+    bpe = BPE(3)
 
     corpus = bpe.train(words)
 
     print(corpus.to_list())
 
     print(bpe.merges.to_list())
+
+    print(bpe.encode("slowest"))
 
 
 if __name__ == "__main__":
