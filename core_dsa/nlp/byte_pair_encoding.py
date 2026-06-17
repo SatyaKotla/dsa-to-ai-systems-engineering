@@ -39,17 +39,34 @@ class BPE:
 
         return best_pair
 
+    def merge_pair(self, symbols: tuple, pair: tuple):
+
+        merged_symbols = DynamicArray()
+
+        i = 0
+        while i < len(symbols):
+
+            if i < len(symbols) - 1 and (symbols[i], symbols[i + 1]) == pair:
+
+                merged_symbols.append(pair[0] + pair[1])
+                i += 2
+            else:
+                merged_symbols.append(symbols[i])
+                i += 1
+
+        return tuple(merged_symbols)
+
 
 def main() -> None:
     "Entry point for manual execution."
 
-    text = "abab"
+    text = "hello"
 
     bpe = BPE()
     symbols = bpe.word_to_symbols(text)
-    pair_frequencies = bpe.get_pair_frequencies(symbols)
+    pair = ("h", "e")
 
-    print(bpe.get_best_pair(pair_frequencies))
+    print(bpe.merge_pair(symbols, pair))
 
 
 if __name__ == "__main__":
