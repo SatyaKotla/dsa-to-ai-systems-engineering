@@ -35,3 +35,6 @@ system_design/route_optimizer/data/osm_http_cache/*
 
 # ignore schema refactoring for now
 system_design/route_optimizer/engine/schemas/*
+
+# ignore BPE training artificats
+core_dsa/nlp/merges.json

@@ -1,5 +1,6 @@
 from core_dsa.arrays.dynamic_array import DynamicArray
 from core_dsa.nlp.ngram_generator import NGram
+import json
 
 
 class BPE:
@@ -120,6 +121,17 @@ class BPE:
 
         return decoded_word
 
+    # Save merges
+    def save_merges(self, filepath: str):
+
+        merge_list = []
+
+        for pair in self.merges:
+            merge_list.append(list(pair))
+
+        with open(filepath, "w") as file:
+            json.dump(merge_list, file, indent=4)
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -132,17 +144,9 @@ def main() -> None:
 
     bpe = BPE(3)
 
-    corpus = bpe.train(words)
+    bpe.train(words)
 
-    print(corpus.to_list())
-
-    print(bpe.merges.to_list())
-
-    symbols = bpe.encode("slowest")
-
-    print(symbols)
-
-    print(bpe.decode(symbols))
+    bpe.save_merges("merges.json")
 
 
 if __name__ == "__main__":
