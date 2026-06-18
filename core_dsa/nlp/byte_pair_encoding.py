@@ -173,6 +173,18 @@ class BPE:
 
                     current_id += 1
 
+    # Encode to IDs
+    def encode_to_ids(self, word: str):
+
+        symbols = self.encode(word)
+
+        token_ids = DynamicArray()
+
+        for symbol in symbols:
+            token_ids.append(self.token_to_id[symbol])
+
+        return token_ids
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -189,6 +201,8 @@ def main() -> None:
 
     print(bpe.token_to_id)
     print(bpe.id_to_token)
+
+    print(bpe.encode_to_ids("slowest").to_list())
 
 
 if __name__ == "__main__":
