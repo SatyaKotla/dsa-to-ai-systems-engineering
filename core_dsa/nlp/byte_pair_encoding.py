@@ -185,6 +185,20 @@ class BPE:
 
         return token_ids
 
+    # Decode IDs to text
+    def decode_ids(self, token_ids: DynamicArray) -> str:
+
+        symbols = DynamicArray()
+
+        for token_id in token_ids:
+
+            if token_id not in self.id_to_token:
+                raise ValueError(f"Unknown token id: {token_id}")
+
+            symbols.append(self.id_to_token[token_id])
+
+        return self.decode(tuple(symbols))
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -202,7 +216,11 @@ def main() -> None:
     print(bpe.token_to_id)
     print(bpe.id_to_token)
 
-    print(bpe.encode_to_ids("slowest").to_list())
+    token_ids = bpe.encode_to_ids("slowest")
+
+    decoded = bpe.decode_ids(token_ids)
+
+    print(decoded)
 
 
 if __name__ == "__main__":
