@@ -9,6 +9,11 @@ class BPE:
         self.num_merges = num_merges
         self.merges = DynamicArray()
 
+        self.token_to_id = {}
+        self.id_to_token = {}
+
+        self.corpus = None
+
     def word_to_symbols(self, word: str) -> tuple:
         symbols = DynamicArray()
 
@@ -103,6 +108,12 @@ class BPE:
 
             corpus = new_corpus
 
+        # store the final corpus
+        self.corpus = corpus
+
+        # build vocab automatically in training
+        self.build_token_vocab()
+
         return corpus
 
     def encode(self, word: str) -> tuple:
@@ -143,6 +154,25 @@ class BPE:
         for pair in merge_list:
             self.merges.append(tuple(pair))
 
+    # token vocabulary
+    def build_token_vocab(self):
+
+        self.token_to_id = {}
+        self.id_to_token = {}
+
+        current_id = 0
+
+        for symbols in self.corpus:
+
+            for symbol in symbols:
+
+                if symbol not in self.token_to_id:
+
+                    self.token_to_id[symbol] = current_id
+                    self.id_to_token[current_id] = symbol
+
+                    current_id += 1
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -157,12 +187,8 @@ def main() -> None:
 
     bpe.train(words)
 
-    bpe.save_merges("merges.json")
-
-    bpe2 = BPE(3)
-
-    bpe2.load_merges("merges.json")
-    print(bpe2.merges.to_list())
+    print(bpe.token_to_id)
+    print(bpe.id_to_token)
 
 
 if __name__ == "__main__":
