@@ -222,6 +222,12 @@ class BPE:
 
         return self.decode(tuple(symbols))
 
+    # Save vocabulary
+    def save_vocab(self, filepath: str):
+
+        with open(filepath, "w") as file:
+            json.dump(self.token_to_id, file, indent=4)
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -230,18 +236,13 @@ def main() -> None:
 
     words.append("low")
     words.append("lower")
+    words.append("lowest")
 
     bpe = BPE(3)
 
     bpe.train(words)
 
-    print(bpe.token_to_id)
-    print(bpe.id_to_token)
-
-    token_ids = bpe.encode_to_ids("slowest")
-
-    print(token_ids.to_list())
-    print(bpe.decode_ids(token_ids))
+    bpe.save_vocab("vocab.json")
 
 
 if __name__ == "__main__":

@@ -38,3 +38,4 @@ system_design/route_optimizer/engine/schemas/*
 
 # ignore BPE training artificats
 core_dsa/nlp/merges.json
+core_dsa/nlp/vocab.json
