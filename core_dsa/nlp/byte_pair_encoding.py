@@ -13,6 +13,10 @@ class BPE:
         self.id_to_token = {}
 
         self.corpus = None
+        self.base_symbols = DynamicArray()
+
+        # adding unknown token for unknown symbols
+        self.UNK_TOKEN = "<UNK>"
 
     def word_to_symbols(self, word: str) -> tuple:
         symbols = DynamicArray()
@@ -72,6 +76,13 @@ class BPE:
         corpus = DynamicArray()
 
         for word in words:
+
+            symbols = self.word_to_symbols(word)
+
+            for symbol in symbols:
+                if symbol not in self.base_symbols:
+                    self.base_symbols.append(symbol)
+
             corpus.append(self.word_to_symbols(word))
 
         # Perform multiple merge operations
@@ -157,11 +168,21 @@ class BPE:
     # token vocabulary
     def build_token_vocab(self):
 
-        self.token_to_id = {}
-        self.id_to_token = {}
+        self.token_to_id = {self.UNK_TOKEN: 0}
+        self.id_to_token = {0: self.UNK_TOKEN}
 
-        current_id = 0
+        current_id = 1
 
+        # adding base symbols first
+        for symbol in self.base_symbols:
+
+            if symbol not in self.token_to_id:
+                self.token_to_id[symbol] = current_id
+                self.id_to_token[current_id] = symbol
+
+                current_id += 1
+
+        # adding merged symbols from corpus
         for symbols in self.corpus:
 
             for symbol in symbols:
@@ -181,7 +202,9 @@ class BPE:
         token_ids = DynamicArray()
 
         for symbol in symbols:
-            token_ids.append(self.token_to_id[symbol])
+            token_ids.append(
+                self.token_to_id.get(symbol, self.token_to_id[self.UNK_TOKEN])
+            )
 
         return token_ids
 
@@ -207,7 +230,6 @@ def main() -> None:
 
     words.append("low")
     words.append("lower")
-    words.append("lowest")
 
     bpe = BPE(3)
 
@@ -218,9 +240,8 @@ def main() -> None:
 
     token_ids = bpe.encode_to_ids("slowest")
 
-    decoded = bpe.decode_ids(token_ids)
-
-    print(decoded)
+    print(token_ids.to_list())
+    print(bpe.decode_ids(token_ids))
 
 
 if __name__ == "__main__":
