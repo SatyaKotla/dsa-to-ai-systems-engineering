@@ -228,6 +228,17 @@ class BPE:
         with open(filepath, "w") as file:
             json.dump(self.token_to_id, file, indent=4)
 
+    # Load vocabulary
+    def load_vocab(self, filepath: str):
+
+        with open(filepath, "r") as file:
+            self.token_to_id = json.load(file)
+
+        self.id_to_token = {}
+
+        for token, token_id in self.token_to_id.items():
+            self.id_to_token[token_id] = token
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -243,6 +254,15 @@ def main() -> None:
     bpe.train(words)
 
     bpe.save_vocab("vocab.json")
+
+    bpe2 = BPE(3)
+
+    bpe2.load_vocab("vocab.json")
+
+    encoded = bpe.encode_to_ids("lower")
+
+    decoded = bpe2.decode_ids(encoded)
+    print(decoded)
 
 
 if __name__ == "__main__":
