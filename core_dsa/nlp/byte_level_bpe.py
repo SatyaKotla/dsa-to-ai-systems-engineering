@@ -15,7 +15,7 @@ class ByteLevelBPE:
             self.token_to_id[(byte,)] = byte
             self.id_to_token[byte] = (byte,)
 
-    def word_to_bytes(self, text: str) -> tuple:
+    def word_to_symbols(self, text: str) -> tuple:
 
         symbols = DynamicArray()
 
@@ -40,6 +40,34 @@ class ByteLevelBPE:
 
         return pair_frequencies
 
+    def get_best_pair(self, pair_frequencies: dict):
+        best_pair = None
+        best_frequency = 0
+
+        for pair, frequency in pair_frequencies.items():
+            if frequency > best_frequency:
+                best_frequency = frequency
+                best_pair = pair
+
+        return best_pair
+
+    def merge_pair(self, symbols: tuple, pair: tuple):
+
+        merged_symbols = DynamicArray()
+
+        i = 0
+        while i < len(symbols):
+
+            if i < len(symbols) - 1 and (symbols[i], symbols[i + 1]) == pair:
+
+                merged_symbols.append(pair[0] + pair[1])
+                i += 2
+            else:
+                merged_symbols.append(symbols[i])
+                i += 1
+
+        return tuple(merged_symbols)
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -48,7 +76,21 @@ def main() -> None:
 
     word = "low"
 
-    print(bpe.word_to_bytes(word))
+    symbols = bpe.word_to_symbols(word)
+
+    print(f"symbols: {symbols}")
+
+    pair_frequencies = bpe.get_pair_frequencies(symbols)
+
+    print(f"pair frequencies: {pair_frequencies}")
+
+    best_pair = bpe.get_best_pair(pair_frequencies)
+
+    print(f"best pair: {best_pair}")
+
+    merged_pair = bpe.merge_pair(symbols, pair=((108,), (111,)))
+
+    print(f"merged_pair: {merged_pair}")
 
 
 if __name__ == "__main__":
