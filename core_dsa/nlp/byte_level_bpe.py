@@ -7,6 +7,7 @@ class ByteLevelBPE:
     def __init__(self, num_merges: int):
 
         self.num_merges = num_merges
+        self.merges = DynamicArray()
 
         self.token_to_id = {}
         self.id_to_token = {}
@@ -14,6 +15,8 @@ class ByteLevelBPE:
         for byte in range(256):
             self.token_to_id[(byte,)] = byte
             self.id_to_token[byte] = (byte,)
+
+        self.corpus = None
 
     def word_to_symbols(self, text: str) -> tuple:
 
@@ -68,29 +71,102 @@ class ByteLevelBPE:
 
         return tuple(merged_symbols)
 
+    def train(self, words: DynamicArray):
+
+        # Convert words to symbol tuples
+        corpus = DynamicArray()
+
+        for word in words:
+
+            symbols = self.word_to_symbols(word)
+
+            corpus.append(symbols)
+
+        # Perform multiple merge operations
+        for _ in range(self.num_merges):
+
+            pair_frequencies = {}
+
+            # count pair frequencies across entire corpus
+            for symbols in corpus:
+
+                word_frequencies = self.get_pair_frequencies(symbols)
+
+                for pair, frequency in word_frequencies.items():
+                    if pair in pair_frequencies:
+                        pair_frequencies[pair] += frequency
+                    else:
+                        pair_frequencies[pair] = frequency
+
+            # Find most frequent pair
+            best_pair = self.get_best_pair(pair_frequencies)
+
+            # If no pairs to merge
+            if best_pair is None:
+                break
+
+            # Save learned merge rule
+            self.merges.append(best_pair)
+
+            # Apply merge to every word
+            new_corpus = DynamicArray()
+
+            for symbols in corpus:
+                new_corpus.append(self.merge_pair(symbols, best_pair))
+
+            corpus = new_corpus
+
+        # store the final corpus
+        self.corpus = corpus
+
+        # build vocab automatically in training
+        self.build_token_vocab()
+
+        return corpus
+
+    # token vocabulary
+    def build_token_vocab(self):
+
+        # 256 byte tokens already exist
+        current_id = len(self.token_to_id)
+
+        # Add learned merge tokens
+        for pair in self.merges:
+            merged_token = pair[0] + pair[1]
+
+            if merged_token not in self.token_to_id:
+                self.token_to_id[merged_token] = current_id
+                self.id_to_token[current_id] = merged_token
+                current_id += 1
+
+        # adding merged symbols from corpus
+        for symbols in self.corpus:
+
+            for symbol in symbols:
+
+                if symbol not in self.token_to_id:
+
+                    self.token_to_id[symbol] = current_id
+                    self.id_to_token[current_id] = symbol
+
+                    current_id += 1
+
 
 def main() -> None:
     "Entry point for manual execution."
 
-    bpe = ByteLevelBPE(1)
+    words = DynamicArray()
 
-    word = "low"
+    words.append("low")
+    words.append("lower")
+    words.append("lowest")
 
-    symbols = bpe.word_to_symbols(word)
+    bpe = ByteLevelBPE(3)
 
-    print(f"symbols: {symbols}")
+    bpe.train(words)
 
-    pair_frequencies = bpe.get_pair_frequencies(symbols)
-
-    print(f"pair frequencies: {pair_frequencies}")
-
-    best_pair = bpe.get_best_pair(pair_frequencies)
-
-    print(f"best pair: {best_pair}")
-
-    merged_pair = bpe.merge_pair(symbols, pair=((108,), (111,)))
-
-    print(f"merged_pair: {merged_pair}")
+    print(bpe.merges.to_list())
+    print(dict(list(bpe.token_to_id.items())[-3:]))
 
 
 if __name__ == "__main__":
