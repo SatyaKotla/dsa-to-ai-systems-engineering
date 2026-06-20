@@ -41,3 +41,6 @@ core_dsa/nlp/merges.json
 core_dsa/nlp/vocab.json
 core_dsa/nlp/byte_level_merges.json
 core_dsa/nlp/byte_level_vocab.json
+
+# ignore BPE test artifacts
+tests/core_dsa/nlp/*.json
