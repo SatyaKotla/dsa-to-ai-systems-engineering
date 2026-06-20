@@ -228,11 +228,33 @@ class ByteLevelBPE:
         return tuple(symbols)
 
     # decode IDs (returns text)
-    def decode_ids(self, token_ids: DynamicArray):
+    def decode_ids(self, token_ids: DynamicArray, skip_special_tokens: bool = True):
 
         symbols = self.decode_from_ids(token_ids)
 
-        return self.decode(symbols)
+        special_tokens = {self.PAD_TOKEN, self.BOS_TOKEN, self.EOS_TOKEN}
+
+        if skip_special_tokens:
+
+            filtered_symbols = DynamicArray()
+
+            for symbol in symbols:
+                if symbol not in special_tokens:
+                    filtered_symbols.append(symbol)
+
+            return self.decode(filtered_symbols)
+
+        else:
+            result = ""
+
+            for symbol in symbols:
+
+                if symbol in special_tokens:
+                    result += symbol
+                else:
+                    result += self.decode((symbol,))
+
+            return result
 
     # Save merges
     def save_merges(self, filepath: str):
@@ -304,6 +326,12 @@ def main() -> None:
 
     ids_with_special_tokens = bpe.encode_to_ids("lowest", add_special_tokens=True)
     print(ids_with_special_tokens.to_list())
+
+    print(f"Decoding without special tokens: {bpe.decode_ids(ids_with_special_tokens)}")
+    print(
+        f"Decoding with special tokens: "
+        f"{bpe.decode_ids(ids_with_special_tokens, skip_special_tokens=False)}"
+    )
 
 
 if __name__ == "__main__":
