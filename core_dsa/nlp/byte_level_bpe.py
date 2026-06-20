@@ -1,5 +1,6 @@
 from core_dsa.nlp.ngram_generator import NGram
 from core_dsa.arrays.dynamic_array import DynamicArray
+import json
 
 
 class ByteLevelBPE:
@@ -208,6 +209,28 @@ class ByteLevelBPE:
 
         return self.decode(symbols)
 
+    # Save merges
+    def save_merges(self, filepath: str):
+
+        merge_list = []
+
+        for pair in self.merges:
+            merge_list.append(list(pair))
+
+        with open(filepath, "w") as file:
+            json.dump(merge_list, file, indent=4)
+
+    # Load merges
+    def load_merges(self, filepath: str):
+
+        self.merges = DynamicArray()
+
+        with open(filepath, "r") as file:
+            merge_list = json.load(file)
+
+        for pair in merge_list:
+            self.merges.append(tuple(tuple(symbol) for symbol in pair))
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -229,6 +252,16 @@ def main() -> None:
     print(bpe.decode_from_ids(token_ids))
 
     print(bpe.decode_ids(token_ids))
+
+    bpe.save_merges("byte_level_merges.json")
+
+    bpe2 = ByteLevelBPE(3)
+
+    bpe2.load_merges("byte_level_merges.json")
+
+    print(bpe.merges.to_list())
+
+    print(bpe2.merges.to_list())
 
 
 if __name__ == "__main__":

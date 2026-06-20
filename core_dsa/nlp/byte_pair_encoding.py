@@ -154,7 +154,7 @@ class BPE:
         with open(filepath, "w") as file:
             json.dump(merge_list, file, indent=4)
 
-    # Save merges
+    # Load merges
     def load_merges(self, filepath: str):
 
         self.merges = DynamicArray()
