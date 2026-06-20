@@ -10,12 +10,28 @@ class ByteLevelBPE:
         self.num_merges = num_merges
         self.merges = DynamicArray()
 
+        # Special tokens
+        self.PAD_TOKEN = "<PAD>"
+        self.BOS_TOKEN = "<BOS>"
+        self.EOS_TOKEN = "<EOS>"
+
         self.token_to_id = {}
         self.id_to_token = {}
 
+        # Base vocabulary
         for byte in range(256):
             self.token_to_id[(byte,)] = byte
             self.id_to_token[byte] = (byte,)
+
+        # Adding special tokens to the vocabulary
+        self.token_to_id[self.PAD_TOKEN] = 256
+        self.id_to_token[256] = self.PAD_TOKEN
+
+        self.token_to_id[self.BOS_TOKEN] = 257
+        self.id_to_token[257] = self.BOS_TOKEN
+
+        self.token_to_id[self.EOS_TOKEN] = 258
+        self.id_to_token[258] = self.EOS_TOKEN
 
         self.corpus = None
 
@@ -129,6 +145,7 @@ class ByteLevelBPE:
     def build_token_vocab(self):
 
         # 256 byte tokens already exist
+        # & 3 special tokens already exist
         current_id = len(self.token_to_id)
 
         # Add learned merge tokens
@@ -163,14 +180,22 @@ class ByteLevelBPE:
         return symbols
 
     # convert each symbol to its ID
-    def encode_to_ids(self, word: str):
+    def encode_to_ids(self, word: str, add_special_tokens: bool = False):
 
         symbols = self.encode(word)
 
         token_ids = DynamicArray()
 
+        # BOS TOKEN
+        if add_special_tokens:
+            token_ids.append(self.token_to_id[self.BOS_TOKEN])
+
         for symbol in symbols:
             token_ids.append(self.token_to_id[symbol])
+
+        # EOS TOKEN
+        if add_special_tokens:
+            token_ids.append(self.token_to_id[self.EOS_TOKEN])
 
         return token_ids
 
@@ -274,15 +299,11 @@ def main() -> None:
 
     bpe.train(words)
 
-    bpe.save_vocab("byte_level_vocab.json")
+    ids = bpe.encode_to_ids("lowest")
+    print(ids.to_list())
 
-    bpe2 = ByteLevelBPE(3)
-
-    bpe2.load_vocab("byte_level_vocab.json")
-
-    print(bpe.token_to_id == bpe2.token_to_id)
-
-    print(bpe.id_to_token == bpe2.id_to_token)
+    ids_with_special_tokens = bpe.encode_to_ids("lowest", add_special_tokens=True)
+    print(ids_with_special_tokens.to_list())
 
 
 if __name__ == "__main__":
