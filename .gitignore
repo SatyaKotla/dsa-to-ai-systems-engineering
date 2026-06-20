@@ -40,3 +40,4 @@ system_design/route_optimizer/engine/schemas/*
 core_dsa/nlp/merges.json
 core_dsa/nlp/vocab.json
 core_dsa/nlp/byte_level_merges.json
+core_dsa/nlp/byte_level_vocab.json

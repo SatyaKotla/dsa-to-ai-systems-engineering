@@ -231,6 +231,35 @@ class ByteLevelBPE:
         for pair in merge_list:
             self.merges.append(tuple(tuple(symbol) for symbol in pair))
 
+    # Save vocabulary
+    def save_vocab(self, filepath: str):
+
+        vocab_list = []
+
+        for token, token_id in self.token_to_id.items():
+
+            vocab_list.append({"token": list(token), "id": token_id})
+
+        with open(filepath, "w") as file:
+            json.dump(vocab_list, file, indent=4)
+
+    # Load vocabulary
+    def load_vocab(self, filepath: str):
+
+        self.token_to_id = {}
+        self.id_to_token = {}
+
+        with open(filepath, "r") as file:
+            vocab_list = json.load(file)
+
+        for item in vocab_list:
+
+            token = tuple(item["token"])
+            token_id = item["id"]
+
+            self.token_to_id[token] = token_id
+            self.id_to_token[token_id] = token
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -245,23 +274,15 @@ def main() -> None:
 
     bpe.train(words)
 
-    token_ids = bpe.encode_to_ids("lowest")
-
-    print(token_ids.to_list())
-
-    print(bpe.decode_from_ids(token_ids))
-
-    print(bpe.decode_ids(token_ids))
-
-    bpe.save_merges("byte_level_merges.json")
+    bpe.save_vocab("byte_level_vocab.json")
 
     bpe2 = ByteLevelBPE(3)
 
-    bpe2.load_merges("byte_level_merges.json")
+    bpe2.load_vocab("byte_level_vocab.json")
 
-    print(bpe.merges.to_list())
+    print(bpe.token_to_id == bpe2.token_to_id)
 
-    print(bpe2.merges.to_list())
+    print(bpe.id_to_token == bpe2.id_to_token)
 
 
 if __name__ == "__main__":
