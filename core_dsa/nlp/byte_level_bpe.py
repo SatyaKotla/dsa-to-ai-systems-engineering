@@ -151,6 +151,63 @@ class ByteLevelBPE:
 
                     current_id += 1
 
+    # encode
+    def encode(self, word: str) -> tuple:
+        symbols = self.word_to_symbols(word)
+
+        for pair in self.merges:
+
+            symbols = self.merge_pair(symbols, pair)
+
+        return symbols
+
+    # convert each symbol to its ID
+    def encode_to_ids(self, word: str):
+
+        symbols = self.encode(word)
+
+        token_ids = DynamicArray()
+
+        for symbol in symbols:
+            token_ids.append(self.token_to_id[symbol])
+
+        return token_ids
+
+    # Decode
+    def decode(self, symbols: tuple) -> str:
+
+        byte_values = DynamicArray()
+
+        for symbol in symbols:
+
+            for byte in symbol:
+                byte_values.append(byte)
+
+        decoded_word = bytes(byte_values.to_list()).decode("utf-8")
+
+        return decoded_word
+
+    # decode from IDs (returns symbol representation)
+    def decode_from_ids(self, token_ids: DynamicArray):
+
+        symbols = DynamicArray()
+
+        for token_id in token_ids:
+
+            if token_id not in self.id_to_token:
+                raise ValueError(f"Unknown token id: {token_id}")
+
+            symbols.append(self.id_to_token[token_id])
+
+        return tuple(symbols)
+
+    # decode IDs (returns text)
+    def decode_ids(self, token_ids: DynamicArray):
+
+        symbols = self.decode_from_ids(token_ids)
+
+        return self.decode(symbols)
+
 
 def main() -> None:
     "Entry point for manual execution."
@@ -165,8 +222,13 @@ def main() -> None:
 
     bpe.train(words)
 
-    print(bpe.merges.to_list())
-    print(dict(list(bpe.token_to_id.items())[-3:]))
+    token_ids = bpe.encode_to_ids("lowest")
+
+    print(token_ids.to_list())
+
+    print(bpe.decode_from_ids(token_ids))
+
+    print(bpe.decode_ids(token_ids))
 
 
 if __name__ == "__main__":
