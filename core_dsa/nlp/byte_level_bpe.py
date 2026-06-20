@@ -5,15 +5,16 @@ import json
 
 class ByteLevelBPE:
 
+    PAD_TOKEN = "<PAD>"
+    BOS_TOKEN = "<BOS>"
+    EOS_TOKEN = "<EOS>"
+
+    SPECIAL_TOKENS = (PAD_TOKEN, BOS_TOKEN, EOS_TOKEN)
+
     def __init__(self, num_merges: int):
 
         self.num_merges = num_merges
         self.merges = DynamicArray()
-
-        # Special tokens
-        self.PAD_TOKEN = "<PAD>"
-        self.BOS_TOKEN = "<BOS>"
-        self.EOS_TOKEN = "<EOS>"
 
         self.token_to_id = {}
         self.id_to_token = {}
@@ -24,14 +25,10 @@ class ByteLevelBPE:
             self.id_to_token[byte] = (byte,)
 
         # Adding special tokens to the vocabulary
-        self.token_to_id[self.PAD_TOKEN] = 256
-        self.id_to_token[256] = self.PAD_TOKEN
+        for token_id, token in enumerate(self.SPECIAL_TOKENS, start=256):
 
-        self.token_to_id[self.BOS_TOKEN] = 257
-        self.id_to_token[257] = self.BOS_TOKEN
-
-        self.token_to_id[self.EOS_TOKEN] = 258
-        self.id_to_token[258] = self.EOS_TOKEN
+            self.token_to_id[token] = token_id
+            self.id_to_token[token_id] = token
 
         self.corpus = None
 
@@ -186,14 +183,14 @@ class ByteLevelBPE:
 
         token_ids = DynamicArray()
 
-        # BOS TOKEN
+        # Begin token
         if add_special_tokens:
             token_ids.append(self.token_to_id[self.BOS_TOKEN])
 
         for symbol in symbols:
             token_ids.append(self.token_to_id[symbol])
 
-        # EOS TOKEN
+        # End TOKEN
         if add_special_tokens:
             token_ids.append(self.token_to_id[self.EOS_TOKEN])
 
@@ -232,14 +229,12 @@ class ByteLevelBPE:
 
         symbols = self.decode_from_ids(token_ids)
 
-        special_tokens = {self.PAD_TOKEN, self.BOS_TOKEN, self.EOS_TOKEN}
-
         if skip_special_tokens:
 
             filtered_symbols = DynamicArray()
 
             for symbol in symbols:
-                if symbol not in special_tokens:
+                if symbol not in self.SPECIAL_TOKENS:
                     filtered_symbols.append(symbol)
 
             return self.decode(filtered_symbols)
@@ -249,7 +244,7 @@ class ByteLevelBPE:
 
             for symbol in symbols:
 
-                if symbol in special_tokens:
+                if symbol in self.SPECIAL_TOKENS:
                     result += symbol
                 else:
                     result += self.decode((symbol,))
