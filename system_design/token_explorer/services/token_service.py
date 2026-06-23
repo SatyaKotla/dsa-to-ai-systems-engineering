@@ -7,9 +7,8 @@ class TokenService:
 
     def __init__(self, num_merges=1):
 
+        self.num_merges = num_merges
         self.word_tokenizer = ManualTokenizer()
-        self.character_bpe = BPE(num_merges=num_merges)
-        self.byte_bpe = ByteLevelBPE(num_merges=num_merges)
 
     def tokenize_word(self, text: str):
         tokens = self.word_tokenizer.tokenize(text=text).to_list()
@@ -24,15 +23,27 @@ class TokenService:
 
     def tokenize_character_bpe(self, text: str):
 
-        tokens = list(self.character_bpe.encode(text))
+        character_bpe = BPE(num_merges=self.num_merges)
+
+        words = self.word_tokenizer.tokenize(text)
+
+        character_bpe.train(words)
+
+        tokens = list(character_bpe.encode(text))
 
         return {"tokens": tokens, "token_count": len(tokens)}
 
     def tokenize_byte_bpe(self, text: str):
 
-        tokens = list(self.byte_bpe.encode(text))
+        byte_bpe = ByteLevelBPE(num_merges=self.num_merges)
 
-        token_ids = self.byte_bpe.encode_to_ids(text)
+        words = self.word_tokenizer.tokenize(text)
+
+        byte_bpe.train(words)
+
+        tokens = list(byte_bpe.encode(text))
+
+        token_ids = byte_bpe.encode_to_ids(text)
 
         return {
             "tokens": tokens,
@@ -53,7 +64,7 @@ class TokenService:
 def main() -> None:
     "Entry point for manual execution."
 
-    service = TokenService()
+    service = TokenService(3)
 
     result = service.compare("lowest lower low")
 
