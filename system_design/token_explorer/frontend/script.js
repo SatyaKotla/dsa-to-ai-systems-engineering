@@ -66,10 +66,18 @@ function renderResults(data) {
     ).textContent =
         data.word.token_count;
 
+    const wordTokens =
+        data.word.tokens
+            .map(
+                token =>
+                    `<span class="token-chip">${token}</span>`
+
+            ).join("");
+
     document.getElementById(
         "word-output"
-    ).textContent =
-        data.word.tokens.join(" | ");
+    ).innerHTML =
+        wordTokens;
 
     //Character Tokens
     document.getElementById(
@@ -77,12 +85,18 @@ function renderResults(data) {
     ).textContent =
         data.character.token_count;
 
+    const characterTokens =
+        formatTokens(data.character.tokens)
+            .map(
+                token =>
+                    `<span class="token-chip">${token}</span>`
+
+            ).join("");
+
     document.getElementById(
         "character-output"
-    ).textContent =
-        formatTokens(
-            data.character.tokens
-        ).join(" | ");
+    ).innerHTML =
+        characterTokens;
 
     //Character BPE Tokens
     document.getElementById(
@@ -90,12 +104,18 @@ function renderResults(data) {
     ).textContent =
         data.character_bpe.token_count;
 
+    const characterBPETokens =
+        formatTokens(data.character_bpe.tokens)
+            .map(
+                token =>
+                    `<span class="token-chip">${token}</span>`
+
+            ).join("");
+
     document.getElementById(
         "character-bpe-output"
-    ).textContent =
-        formatTokens(
-            data.character_bpe.tokens
-        ).join(" | ");
+    ).innerHTML =
+        characterBPETokens;
 
     //Byte BPE Tokens
     document.getElementById(
@@ -106,14 +126,16 @@ function renderResults(data) {
     // Improve byte BPE output readability
 
     const byteTokens =
-        data.byte_bpe.tokens.map(
-            token => `(${token})`
-        );
+        data.byte_bpe.tokens
+            .map(
+                token =>
+                    `<span class="token-chip">(${token})</span>`
+            ).join("");
 
     document.getElementById(
         "byte-bpe-output"
-    ).textContent =
-        byteTokens.join(" | ");
+    ).innerHTML =
+        byteTokens;
 }
 
 
@@ -123,7 +145,7 @@ function formatTokens(tokens){
     return tokens.map(token => {
 
         if (token === " ") {
-            return "<SPACE>";
+            return "&lt;SPACE&gt;";
         }
 
         return token;

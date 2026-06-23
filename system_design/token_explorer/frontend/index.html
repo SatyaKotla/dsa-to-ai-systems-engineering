@@ -3,55 +3,86 @@
     <head>
         <meta charset="UTF-8">
         <title>Token Explorer</title>
+
+        <link rel="stylesheet" href="styles.css">
+
     </head>
 
     <body>
         <h2>Token Explorer</h2>
+        <div class="controls">
 
-        <h4>
-            Please provide the text to be tokenized:
-        </h4>
-        <textarea
-            id="text-input"
-            rows="5"
-            cols="60"></textarea>
+            <div class="input-group">
+                <label for="text-input">Input Text</label>
+                <textarea id="text-input"></textarea>
+            </div>
 
-        <h4>
-            Please provide number of merges to be performed:
-        </h4>
-        <input
-            type="number"
-            id="merge-count"
-            value="1"
-            min="1">
+            <div class="settings-row">
 
-        <button id="tokenize-btn">
-            Tokenize
-        </button>
+                <div class="input-group">
+                    <label for="merge-count">
+                        Merge Count
+                    </label>
 
-        <h3>
-            Word Tokens:
-            <span id="word-count"></span>
-        </h3>
-        <div id="word-output"></div>
+                    <input
+                        type="number"
+                        id="merge-count"
+                        value="1"
+                        min="1">
+                </div>
 
-        <h3>
-            Character Tokens:
-            <span id="character-count"></span>
-        </h3>
-        <div id="character-output"></div>
+                <button id="tokenize-btn">
+                    Tokenize
+                </button>
 
-        <h3>
-            Character BPE:
-            <span id="character-bpe-count"></span>
-        </h3>
-        <div id="character-bpe-output"></div>
+            </div>
+        </div>
 
-        <h3>
-            Byte-Level BPE:
-            <span id="byte-bpe-count"></span>
-        </h3>
-        <div id="byte-bpe-output"></div>
+        <div class="token-section">
+
+            <h3>
+                Word Tokens:
+                <span id="word-count"></span>
+            </h3>
+
+            <div id="word-output"></div>
+
+        </div>
+
+        <div class="token-section">
+
+            <h3>
+                Character Tokens:
+                <span id="character-count"></span>
+            </h3>
+
+            <div id="character-output"></div>
+
+        </div>
+
+        <div class="token-section">
+
+            <h3>
+                Character BPE:
+                <span id="character-bpe-count"></span>
+            </h3>
+
+            <div id="character-bpe-output"></div>
+
+        </div>
+
+        <div class="token-section">
+
+            <h3>
+                Byte-Level BPE:
+                <span id="byte-bpe-count"></span>
+            </h3>
+
+            <div id="byte-bpe-output"></div>
+
+        </div>
+
+
 
         <!--JS-->
         <script src="script.js"></script>
