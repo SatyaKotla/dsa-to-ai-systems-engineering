@@ -9,6 +9,9 @@ class BPE:
         self.num_merges = num_merges
         self.merges = DynamicArray()
 
+        # history
+        self.merge_history = DynamicArray()
+
         self.token_to_id = {}
         self.id_to_token = {}
 
@@ -72,6 +75,9 @@ class BPE:
 
     def train(self, words: DynamicArray):
 
+        # reset merge history
+        self.merge_history = DynamicArray()
+
         # Convert words to symbol tuples
         corpus = DynamicArray()
 
@@ -85,8 +91,18 @@ class BPE:
 
             corpus.append(self.word_to_symbols(word))
 
+        # merge history - intial step
+        initial_snapshot = DynamicArray()
+
+        for symbols in corpus:
+            initial_snapshot.append(symbols)
+
+        self.merge_history.append(
+            {"step": 0, "pair": None, "corpus": initial_snapshot.to_list()}
+        )
+
         # Perform multiple merge operations
-        for _ in range(self.num_merges):
+        for merge_step in range(self.num_merges):
 
             pair_frequencies = {}
 
@@ -118,6 +134,20 @@ class BPE:
                 new_corpus.append(self.merge_pair(symbols, best_pair))
 
             corpus = new_corpus
+
+            # merge history
+            corpus_snapshot = DynamicArray()
+
+            for symbols in corpus:
+                corpus_snapshot.append(symbols)
+
+            self.merge_history.append(
+                {
+                    "step": merge_step + 1,
+                    "pair": best_pair,
+                    "corpus": corpus_snapshot.to_list(),
+                }
+            )
 
         # store the final corpus
         self.corpus = corpus
@@ -253,16 +283,7 @@ def main() -> None:
 
     bpe.train(words)
 
-    bpe.save_vocab("vocab.json")
-
-    bpe2 = BPE(3)
-
-    bpe2.load_vocab("vocab.json")
-
-    encoded = bpe.encode_to_ids("lower")
-
-    decoded = bpe2.decode_ids(encoded)
-    print(decoded)
+    print(bpe.merge_history.to_list())
 
 
 if __name__ == "__main__":
