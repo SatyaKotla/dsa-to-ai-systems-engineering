@@ -1,12 +1,15 @@
 from system_design.kv_store.engine.record import Record
 from system_design.kv_store.engine.clock import SystemClock
+from system_design.kv_store.engine.expiration_entry import ExpirationEntry
+from system_design.kv_store.engine.expiration_manager import ExpirationManager
 
 
 class KVStore:
 
-    def __init__(self, clock: SystemClock | None = None):
+    def __init__(self, clock: SystemClock | None = None, expiration_manager=None):
         self._store = {}
         self._clock = clock or SystemClock()
+        self._expiration_manager = expiration_manager or ExpirationManager()
 
     def put(self, key: str, value: object, ttl: float | None = None):
         if ttl is None:
@@ -15,6 +18,10 @@ class KVStore:
             expires_at = self._clock.now() + ttl
 
         self._store[key] = Record(value=value, expires_at=expires_at)
+
+        # register entry for expiration schedule
+        if expires_at is not None:
+            self._expiration_manager.register(key=key, expires_at=expires_at)
 
     def get(self, key: str):
 
@@ -26,15 +33,18 @@ class KVStore:
         return record.value
 
     def delete(self, key: str):
-
-        if key in self._store:
-            del self._store[key]
-            return True
-        else:
-            return False
+        return self._delete(key)
 
     def exists(self, key: str):
         return self._get_record(key) is not None
+
+    # remove the expired entries
+    def cleanup(self) -> None:
+        current_time = self._clock.now()
+        expired_entries = self._expiration_manager.cleanup_schedule(current_time)
+
+        for entry in expired_entries:
+            self._remove_if_expired(entry)
 
     def _get_record(self, key: str) -> Record | None:
 
@@ -49,32 +59,30 @@ class KVStore:
 
         return record
 
+    def _delete(self, key: str):
+
+        if key in self._store:
+            del self._store[key]
+            return True
+        else:
+            return False
+
+    def _remove_if_expired(self, entry: ExpirationEntry):
+
+        record = self._store.get(entry.key)
+
+        if record is None:
+            return
+
+        if record.expires_at != entry.expires_at:
+            return  # stale heap entry
+
+        self._delete(entry.key)
+
 
 def main() -> None:
     "Entry point for manual execution."
-    import time
-
-    db = KVStore()
-
-    db.put("name", "Gan")
-
-    print(db.get("name") == "Gan")
-    print(db.exists("name"))
-
-    db.delete("name")
-
-    print(db.get("name") is None)
-    print(not (db.exists("name")))
-
-    db.put("temp", "value", ttl=2)
-
-    print(db.get("temp"))
-
-    time.sleep(3)
-
-    print(db.get("temp"))
-
-    print(db.exists("temp"))
+    pass
 
 
 if __name__ == "__main__":
