@@ -5,6 +5,7 @@ from system_design.kv_store.engine.record import Record
 from system_design.kv_store.engine.background_cleaner import BackgroundCleaner
 from system_design.kv_store.engine.expiration_manager import ExpirationManager
 from system_design.kv_store.engine.store import KVStore
+from system_design.kv_store.engine.clock import FakeClock
 import time
 
 
@@ -145,3 +146,18 @@ def test_cleanup_on_empty_store():
     db.cleanup()
 
     assert db._expiration_manager.size() == 0
+
+
+# test the fakeclock
+def test_fake_clock():
+    clock = FakeClock()
+
+    db = KVStore(clock=clock)
+
+    db.put("temp", "value", ttl=2)
+
+    clock.advance(3)
+
+    db.cleanup()
+
+    assert db.get("temp") is None

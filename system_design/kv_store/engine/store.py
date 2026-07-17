@@ -1,12 +1,12 @@
 from system_design.kv_store.engine.record import Record
-from system_design.kv_store.engine.clock import SystemClock
+from system_design.kv_store.engine.clock import Clock, SystemClock
 from system_design.kv_store.engine.expiration_entry import ExpirationEntry
 from system_design.kv_store.engine.expiration_manager import ExpirationManager
 
 
 class KVStore:
 
-    def __init__(self, clock: SystemClock | None = None, expiration_manager=None):
+    def __init__(self, clock: Clock | None = None, expiration_manager=None):
         self._store = {}
         self._clock = clock or SystemClock()
         self._expiration_manager = expiration_manager or ExpirationManager()
