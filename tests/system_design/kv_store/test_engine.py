@@ -247,3 +247,61 @@ def test_ttl_expired_key():
     clock.advance(15)
 
     assert db.ttl("A") == -2
+
+
+# test background cleaner
+def test_background_cleaner_removes_expired_key():
+    db = KVStore()
+
+    cleaner = BackgroundCleaner(db, interval=0.1)
+    cleaner.start()
+
+    try:
+        db.put("A", 100, ttl=1)
+
+        time.sleep(1.5)
+
+        assert db.get("A") is None
+    finally:
+        cleaner.stop()
+
+
+def test_background_cleaner_does_not_remove_permanent_key():
+    db = KVStore()
+
+    cleaner = BackgroundCleaner(db, interval=0.1)
+    cleaner.start()
+
+    try:
+        db.put("A", 100)
+
+        time.sleep(1.5)
+
+        assert db.get("A") == 100
+    finally:
+        cleaner.stop()
+
+
+def test_background_cleaner_ignores_stale_expiration():
+    db = KVStore()
+
+    cleaner = BackgroundCleaner(db, interval=0.1)
+    cleaner.start()
+
+    try:
+        db.put("A", 100, ttl=1)
+
+        time.sleep(0.5)
+
+        db.set_ttl("A", 3)
+
+        time.sleep(1)
+
+        assert db.get("A") == 100
+
+        time.sleep(2.5)
+
+        assert db.get("A") is None
+
+    finally:
+        cleaner.stop()
