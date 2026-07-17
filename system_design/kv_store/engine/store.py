@@ -61,6 +61,17 @@ class KVStore:
 
         return True
 
+    # remove expiration
+    def persist(self, key: str) -> bool:
+        record = self._get_record(key)
+
+        if not (record):
+            return False
+
+        record.expires_at = None
+
+        return True
+
     def _get_record(self, key: str) -> Record | None:
 
         record = self._store.get(key)

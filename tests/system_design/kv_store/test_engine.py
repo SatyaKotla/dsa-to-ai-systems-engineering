@@ -178,3 +178,29 @@ def test_set_ttl():
     db.cleanup()
 
     assert db.get("A") is None
+
+
+# test persist
+def test_persist():
+
+    clock = FakeClock()
+
+    db = KVStore(clock=clock)
+
+    db.put("A", 100, ttl=10)
+
+    assert db.persist("A")
+
+    clock.advance(20)
+
+    db.cleanup()
+
+    assert db.get("A") == 100
+
+
+def test_persist_non_existent_key():
+    clock = FakeClock()
+
+    db = KVStore(clock=clock)
+
+    assert db.persist("missing") is False
