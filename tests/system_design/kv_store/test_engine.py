@@ -204,3 +204,46 @@ def test_persist_non_existent_key():
     db = KVStore(clock=clock)
 
     assert db.persist("missing") is False
+
+
+# ttl
+def test_ttl():
+    clock = FakeClock()
+
+    db = KVStore(clock=clock)
+
+    db.put("A", 100, ttl=20)
+
+    clock.advance(5)
+
+    assert db.ttl("A") == 15
+
+
+def test_ttl_permanent_key():
+    clock = FakeClock()
+
+    db = KVStore(clock=clock)
+
+    db.put("A", 100)
+
+    assert db.ttl("A") == -1
+
+
+def test_ttl_missing_key():
+    clock = FakeClock()
+
+    db = KVStore(clock=clock)
+
+    assert db.ttl("missing") == -2
+
+
+def test_ttl_expired_key():
+    clock = FakeClock()
+
+    db = KVStore(clock=clock)
+
+    db.put("A", 100, ttl=10)
+
+    clock.advance(15)
+
+    assert db.ttl("A") == -2

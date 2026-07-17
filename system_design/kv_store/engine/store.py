@@ -72,6 +72,30 @@ class KVStore:
 
         return True
 
+    # find the remaining time
+    def ttl(self, key: str) -> float:
+        """
+        Returns:
+            >=0: Remaining TTL in seconds.
+
+            -1: Key exists but no expiration.
+
+            -2: Key does not exist.
+
+        """
+
+        record = self._get_record(key)
+
+        if not (record):
+            return -2
+
+        if record.expires_at is None:
+            return -1
+
+        remaining_time = record.expires_at - self._clock.now()
+
+        return max(0.0, remaining_time)
+
     def _get_record(self, key: str) -> Record | None:
 
         record = self._store.get(key)
