@@ -46,6 +46,21 @@ class KVStore:
         for entry in expired_entries:
             self._remove_if_expired(entry)
 
+    # update the expiring time
+    def set_ttl(self, key: str, ttl: float | None = None) -> bool:
+        record = self._get_record(key)
+
+        if not (record):
+            return False
+
+        expires_at = self._clock.now() + ttl
+
+        record.expires_at = expires_at
+
+        self._expiration_manager.register(key, expires_at)
+
+        return True
+
     def _get_record(self, key: str) -> Record | None:
 
         record = self._store.get(key)

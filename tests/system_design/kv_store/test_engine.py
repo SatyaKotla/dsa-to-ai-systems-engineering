@@ -161,3 +161,20 @@ def test_fake_clock():
     db.cleanup()
 
     assert db.get("temp") is None
+
+
+# test the expiry updation
+def test_set_ttl():
+    clock = FakeClock()
+
+    db = KVStore(clock=clock)
+
+    db.put("A", 100)
+
+    assert db.set_ttl("A", 10)
+
+    clock.advance(11)
+
+    db.cleanup()
+
+    assert db.get("A") is None
